@@ -1,0 +1,1770 @@
+<title>Pakka</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Pakka: a friend-group trip only goes ahead, and money only moves, once enough people commit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Caveat:wght@600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>/* Layout: brand + demo rail beside one phone that runs the whole trip lifecycle.
+   Look: golden-hour trip. Sunset sky behind, boarding-pass and sticker motifs, chunky
+   outlined buttons. Dark mode is the same beach after sundown. */
+:root{
+  --sky1:#FFE9D6; --sky2:#FFD6CC; --sky3:#EBD9FA; --glow:rgba(255,182,39,.55);
+  --bg:#FFEFE4; --surface:#FFFFFF; --sunk:#FFF5EC; --ink:#2A1640; --muted:#6B5A73; --line:#F0DDD0;
+  --accent:#FF5E3A; --accent-ink:#B5370F; --accent-soft:#FFE4D8; --go:#0B7D6F; --go-soft:#D3F4EC; --on-go:#FFFFFF;
+  --no:#C2364B; --no-soft:#FDE1E6; --warn:#9A5800; --warn-soft:#FFF0CC;
+  --pop:#FFD23F; --lilac:#8B7BFF;
+  --bd:#2A1640; --sh:#2A1640; --shadow:rgba(120,40,60,.35);
+  --sunset:linear-gradient(120deg,#FFD23F 0%,#FF9A5A 45%,#FF6B8B 100%);
+  --bezel:linear-gradient(160deg,#FF9A5A 0%,#FF5E8A 50%,#8B7BFF 100%);
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --hand:"Caveat","Bradley Hand","Segoe Print",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sky1:#120A22; --sky2:#1D1034; --sky3:#3A1A44; --glow:rgba(255,94,58,.32);
+  --bg:#150C24; --surface:#22153A; --sunk:#1B1030; --ink:#FBEFFF; --muted:#BCA9C9; --line:#3B2A52;
+  --accent:#FF7A55; --accent-ink:#FFA585; --accent-soft:#40202A; --go:#3FD7B9; --go-soft:#123A35; --on-go:#0E0718;
+  --no:#FF7D8E; --no-soft:#401826; --warn:#FFC857; --warn-soft:#3A2C12;
+  --bd:#5C4676; --sh:#07030D; --shadow:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sky1:#120A22; --sky2:#1D1034; --sky3:#3A1A44; --glow:rgba(255,94,58,.32);
+  --bg:#150C24; --surface:#22153A; --sunk:#1B1030; --ink:#FBEFFF; --muted:#BCA9C9; --line:#3B2A52;
+  --accent:#FF7A55; --accent-ink:#FFA585; --accent-soft:#40202A; --go:#3FD7B9; --go-soft:#123A35; --on-go:#0E0718;
+  --no:#FF7D8E; --no-soft:#401826; --warn:#FFC857; --warn-soft:#3A2C12;
+  --bd:#5C4676; --sh:#07030D; --shadow:rgba(0,0,0,.6); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  background:radial-gradient(circle at 88% 6%,var(--glow) 0,transparent 30%),radial-gradient(circle at 6% 96%,color-mix(in srgb,var(--lilac) 22%,transparent) 0,transparent 35%),linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 50%,var(--sky3) 100%) fixed;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 390px;grid-template-areas:"intro phone" "ticker phone" "rail phone";grid-template-rows:auto auto 1fr;column-gap:44px;row-gap:18px;align-items:start}
+.intro{grid-area:intro;min-width:0} .rail{grid-area:rail;min-width:0;display:flex;flex-direction:column;gap:14px} .phone{grid-area:phone} .ticker{grid-area:ticker}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);grid-template-areas:"intro" "ticker" "phone" "rail";grid-template-rows:none}}
+
+/* intro */
+.brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand h1{font-family:var(--display);font-weight:800;font-size:56px;letter-spacing:-.035em;margin:0;line-height:.95}
+.brand .sun{width:22px;height:22px;border-radius:50%;background:var(--sunset);box-shadow:0 0 0 5px color-mix(in srgb,var(--pop) 30%,transparent);display:inline-block;align-self:flex-start;margin-top:4px}
+.stamp{font-family:var(--hand);font-size:22px;font-weight:700;color:var(--ink);background:var(--pop);padding:0 12px 2px;border-radius:8px;border:2px solid var(--bd);box-shadow:3px 3px 0 var(--sh);transform:rotate(-4deg);line-height:1.3}
+.tag{font-family:var(--display);font-size:24px;font-weight:700;margin:14px 0 8px;text-wrap:balance;max-width:28ch;line-height:1.2;letter-spacing:-.01em}
+.tag em{font-style:normal;background:linear-gradient(transparent 58%,color-mix(in srgb,var(--accent) 38%,transparent) 58%);padding:0 2px}
+.lede{color:var(--muted);max-width:58ch;margin:0}
+.flag{display:inline-flex;margin-top:14px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--accent-ink);background:var(--surface);border:1.5px dashed var(--accent);padding:4px 11px;border-radius:999px}
+
+/* ticker */
+.ticker{min-width:0;overflow:hidden;border-block:2px solid var(--bd);background:var(--ink);color:var(--surface);border-radius:12px;transform:rotate(-1deg)}
+.ticker-in{display:flex;width:max-content;animation:tick 28s linear infinite}
+.ticker span{padding:8px 18px;font-family:var(--display);font-weight:700;font-size:14px;white-space:nowrap}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* story rail: the demo scenarios read as stops on a route */
+.steps{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px;position:relative}
+.steps::before{content:"";position:absolute;left:25px;top:18px;bottom:18px;border-left:2px dashed color-mix(in srgb,var(--ink) 25%,transparent)}
+.steps button{all:unset;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;padding:10px 12px;border-radius:14px;width:100%;box-sizing:border-box;position:relative}
+.steps button:hover{background:color-mix(in srgb,var(--surface) 70%,transparent)}
+.steps button:focus-visible{outline:2px solid var(--accent)}
+.steps .n{font-family:var(--mono);font-size:11px;font-weight:500;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--bd);color:var(--ink)}
+.steps .t{font-weight:700;display:block;font-family:var(--display);font-size:16px}
+.steps .d{color:var(--muted);font-size:13.5px;display:block}
+.steps button[aria-current="step"]{background:var(--surface);border:2px solid var(--bd);box-shadow:4px 4px 0 var(--sh);padding:8px 10px}
+.steps button[aria-current="step"] .n{background:var(--pop);color:#2A1640}
+.demo{border:2px dashed color-mix(in srgb,var(--ink) 30%,transparent);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:color-mix(in srgb,var(--surface) 55%,transparent)}
+.demo .btns{display:flex;gap:6px;flex-wrap:wrap}
+.lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;display:block}
+.lbl .money{letter-spacing:0;text-transform:none;font-weight:500}
+details.more{border-top:1px solid var(--line);padding-top:10px}
+details.more summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"+ ";font-family:var(--mono)}
+details.more[open] summary::before{content:"− "}
+details.more[open]{display:flex;flex-direction:column;gap:10px}
+details.more p{margin:0;font-size:13.5px}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+.note.rule{border-top:1px solid color-mix(in srgb,var(--ink) 15%,transparent);padding-top:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--sunk);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:500;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--bd);background:var(--pop);color:#2A1640;font-weight:700;box-shadow:2px 2px 0 var(--sh)}
+.path{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.path span{padding:3px 8px;border-radius:6px;background:var(--surface);color:var(--muted);border:1px solid transparent}
+.path span.done{color:var(--ink)}
+.path span.now{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.path span.off{background:var(--no-soft);color:var(--no)}
+.path i{color:var(--muted);font-style:normal}
+.fx{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.fx li::marker{color:var(--accent)}
+.integ{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px}
+.integ li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px}
+.integ .cls{font-family:var(--mono);font-size:11px;padding:2px 6px;border-radius:5px;background:var(--surface);border:1px solid var(--line);height:fit-content}
+.integ .cls.on{background:var(--go-soft);color:var(--go);border-color:transparent}
+.integ small{color:var(--muted);grid-column:2;line-height:1.4}
+
+/* phone */
+.phone{background:var(--bezel);border-radius:42px;padding:9px;width:100%;max-width:390px;margin:0 auto;box-shadow:0 34px 70px -30px var(--shadow),inset 0 0 0 2px rgba(255,255,255,.25);position:sticky;top:16px}
+.screen{background:var(--surface);border-radius:34px;overflow:hidden;height:760px;display:flex;flex-direction:column;position:relative}
+@media (max-width:900px){.phone{position:static}}
+@media (max-width:480px){.phone{padding:5px;border-radius:24px;max-width:none}.screen{border-radius:20px;height:auto;min-height:72vh;overflow:visible}}
+.status{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 20px 4px;font-size:12px;color:var(--muted);font-family:var(--mono)}
+.who{display:flex;align-items:center;gap:6px;cursor:pointer;background:var(--sunk);border:1.5px solid var(--line);border-radius:999px;padding:2px 8px 2px 3px}
+.who select{all:unset;cursor:pointer;font-family:var(--body);font-weight:700;font-size:12.5px;color:var(--ink);padding-right:14px;background:linear-gradient(45deg,transparent 50%,var(--muted) 50%) right 4px top 55%/4px 4px no-repeat,linear-gradient(-45deg,transparent 50%,var(--muted) 50%) right 0 top 55%/4px 4px no-repeat}
+.who select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.av.sm{width:20px;height:20px;font-size:8.5px}
+.title{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 20px 12px;border-bottom:1.5px dashed var(--line)}
+.title b{font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phase{flex:0 0 auto;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px 3px 16px;border-radius:4px 999px 999px 4px;background:var(--sunk);color:var(--muted);position:relative}
+.phase::before{content:"";position:absolute;left:6px;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;background:var(--surface)}
+.phase.go{background:var(--go-soft);color:var(--go)} .phase.no{background:var(--no-soft);color:var(--no)} .phase.mid{background:var(--pop);color:#2A1640}
+.tabs{display:flex;padding:4px 6px calc(6px + env(safe-area-inset-bottom,0px));border-top:1.5px solid var(--line);background:var(--surface)}
+@media (max-width:480px){.tabs{position:sticky;bottom:0;border-radius:0 0 20px 20px;z-index:3}}
+.tab{all:unset;cursor:pointer;flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 4px;margin:0 1px;font-size:11.5px;font-weight:600;color:var(--muted);white-space:nowrap;border-radius:14px}
+.tab .ti{font-size:19px;line-height:1.2;position:relative;transition:transform .2s}
+.tab.locked{opacity:.5} .tab.locked .ti{filter:grayscale(1)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.tab[aria-current="page"]{color:var(--ink);font-weight:800;background:var(--accent-soft)}
+.tab[aria-current="page"] .ti{transform:translateY(-1px) scale(1.12)}
+.tab .st{position:absolute;right:-5px;top:0;width:7px;height:7px;border-radius:50%;background:transparent;border:1.5px solid var(--surface)}
+.tab .st.done{background:var(--go)} .tab .st.now{background:var(--accent)} .tab .st.open,.tab .st.off{display:none}
+.view{flex:1;overflow-y:auto;padding:16px 18px 22px;display:flex;flex-direction:column;gap:16px}
+.view > *{flex-shrink:0}
+@media (max-width:480px){.view{overflow:visible}}
+
+/* type + common */
+h2{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1;margin:4px 0 0;letter-spacing:-.02em;text-wrap:balance}
+h4{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.money{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.sec{display:flex;flex-direction:column;gap:8px}
+
+/* boarding pass (home hero) */
+.pass{border:2px solid var(--bd);border-radius:20px;box-shadow:4px 4px 0 var(--sh);background:var(--surface);overflow:hidden;position:relative}
+.pass-main{padding:14px 16px 14px;background:linear-gradient(180deg,color-mix(in srgb,var(--pop) 22%,var(--surface)) 0%,var(--surface) 100%)}
+.pass-dest{font-family:var(--display);font-weight:800;font-size:38px;line-height:1;letter-spacing:-.03em;margin-top:6px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pass-dest small{font-family:var(--hand);font-size:22px;font-weight:700;color:var(--accent-ink);letter-spacing:0}
+.pass-route{font-size:17px;margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pass-route i{font-style:normal;color:var(--accent);font-size:16px;flex:1 1 30px;min-width:30px;text-align:center;background:linear-gradient(90deg,var(--line) 0 40%,transparent 40% 60%,var(--line) 60%) center/100% 2px no-repeat}
+.pass-stub{position:relative;display:flex;gap:16px;flex-wrap:wrap;padding:10px 16px 12px;border-top:2px dashed var(--line);font-size:13px;color:var(--muted)}
+.pass-stub b{font-family:var(--display);font-size:18px;color:var(--ink);margin-right:3px}
+.pass-stub::before,.pass-stub::after{content:"";position:absolute;top:-10px;width:18px;height:18px;border-radius:50%;background:var(--surface);border:2px solid var(--bd)}
+.pass-stub::before{left:-11px} .pass-stub::after{right:-11px}
+
+.calc{background:var(--sunset);color:#2A1640;border:2px solid var(--bd);box-shadow:4px 4px 0 var(--sh);border-radius:18px;padding:12px 14px;font-size:14px;font-weight:600;display:flex;flex-direction:column;gap:2px;transform:rotate(-.6deg)}
+.calc b{font-size:24px;font-weight:500}
+.calc .sub{font-size:13px;color:rgba(42,22,64,.78);font-weight:500}
+.card{border:1.5px solid var(--line);border-radius:18px;padding:13px 14px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.card.pact{border:2px dashed var(--accent);background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}
+.banner{border-radius:18px;padding:13px 14px;display:flex;flex-direction:column;gap:4px}
+.banner.go{background:var(--go-soft)} .banner.no{background:var(--no-soft)} .banner.warn{background:var(--warn-soft)} .banner.info{background:var(--sunk)}
+.banner b.big{font-family:var(--display);font-size:26px;line-height:1.05;letter-spacing:-.02em}
+.banner.go b.big{color:var(--go)} .banner.no b.big{color:var(--no)}
+.banner.go b.big::after{content:" 🎉"}
+.banner.warn b{color:var(--warn)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--sunk);border-radius:12px;padding:10px}
+.stat b{display:block;font-family:var(--display);font-size:22px;line-height:1.1}
+.stat span{font-size:12px;color:var(--muted)}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.list li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px;min-width:0}
+.list li:last-child{border-bottom:none}
+.list .grow{flex:1;min-width:0}
+.av{--h:20;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:800;flex:0 0 auto;color:#2A1640;background:hsl(var(--h) 90% 82%);border:1.5px solid var(--bd)}
+.pill{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.in,.pill.ok{background:var(--go-soft);color:var(--go)} .pill.out,.pill.bad{background:var(--no-soft);color:var(--no)} .pill.warn{background:var(--warn-soft);color:var(--warn)}
+.next{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.next button{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;width:100%;box-sizing:border-box;padding:12px 14px;border-radius:14px;background:var(--surface);border:2px solid var(--bd);box-shadow:3px 3px 0 var(--sh);color:var(--ink);font-size:14px;font-weight:600;transition:transform .12s,box-shadow .12s}
+.next button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--sh)}
+.next button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.next button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.next button::after{content:"→";color:var(--accent-ink);font-weight:800;font-size:16px}
+
+/* recent activity: one tidy line per thing that happened */
+.feed{list-style:none;margin:0;padding:4px 0;display:flex;flex-direction:column;background:var(--sunk);border-radius:16px}
+.feed li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:8px;padding:7px 12px;font-size:13.5px}
+.feed li + li{border-top:1px dashed var(--line)}
+.feed .fi{font-size:16px;line-height:1;text-align:center}
+.feed .ft{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed .more{font-size:11px;font-weight:700;color:var(--muted);background:var(--surface);border-radius:999px;padding:1px 6px;margin-left:2px}
+.feed time{font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+/* forms */
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--muted);min-width:0}
+input[type=text],input[type=date],input[type=time],input[type=url],select.in{width:100%;min-width:0;border:1.5px solid var(--line);background:var(--sunk);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--ink);font-weight:400}
+input[type=text]:focus,input[type=date]:focus,input[type=time]:focus,input[type=url]:focus,select.in:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:flex;align-items:center;gap:5px;font-size:13px;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+.checks input{accent-color:var(--accent)}
+.radios{display:flex;flex-direction:column;gap:6px}
+.radios label{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;font-size:13.5px;cursor:pointer}
+.radios input{margin-top:3px;accent-color:var(--accent)}
+.radios label:has(input:checked){border-color:var(--bd);background:var(--accent-soft);box-shadow:3px 3px 0 var(--sh)}
+.stepper{display:flex;align-items:center;justify-content:space-between;background:var(--sunk);border:1.5px solid var(--line);border-radius:16px;padding:6px}
+.stepper button{width:38px;height:38px;border-radius:12px;background:var(--surface);border:2px solid var(--bd);box-shadow:2px 2px 0 var(--sh);font-size:19px;font-weight:700;cursor:pointer}
+.stepper button:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--sh)}
+.stepper b{font-family:var(--display);font-size:22px}
+.stepper small{font-size:13px;color:var(--muted);font-weight:500}
+
+/* buttons: chunky sticker style */
+.btn{border:2px solid var(--bd);box-shadow:3px 3px 0 var(--sh);cursor:pointer;text-align:center;font-weight:700;padding:12px 16px;border-radius:999px;background:var(--ink);color:var(--surface);font-size:14.5px;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:6px;transition:transform .12s,box-shadow .12s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--sh)}
+.btn:active:not(:disabled){transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.btn.go{background:var(--go);color:var(--on-go)}
+.btn.ghost{background:var(--surface);color:var(--ink)}
+.btn.warn{background:var(--surface);color:var(--no);border-color:var(--no);box-shadow:3px 3px 0 var(--no-soft)}
+.btn.sm{padding:6px 12px;font-size:13px;box-shadow:2px 2px 0 var(--sh)}
+.btn.warn.sm{box-shadow:2px 2px 0 var(--no-soft)}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+a.ext{color:var(--accent-ink);font-weight:700;font-size:13.5px;text-decoration:none;border-bottom:2px solid var(--accent-soft)}
+a.ext::after{content:" ↗";font-size:11px}
+.lock{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:22px 4px}
+.lock .ic{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;background:var(--sunk);padding:3px 10px;border-radius:999px}
+.lock .ic::before{content:"🔒 "}
+
+/* commit meter (core moment from v1) */
+.meter{display:flex;flex-direction:column;gap:9px;background:var(--sunk);border-radius:20px;padding:14px 16px 16px}
+.meter .count{font-family:var(--display);font-size:52px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.meter .count small{font-size:16px;color:var(--muted);font-weight:600;letter-spacing:0}
+.track{position:relative;height:18px;background:var(--surface);border-radius:999px;border:2px solid var(--bd);margin-top:20px}
+.fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#FFD23F,#FF8A5B 50%,#FF5E8A);border-radius:999px;transition:width .45s ease}
+.mark{position:absolute;top:-8px;bottom:-8px;width:3px;margin-left:-1.5px;background:var(--ink);border-radius:2px}
+.mark span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap;background:var(--pop);color:#2A1640;padding:0 6px;border-radius:6px}
+.timer{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);gap:8px;flex-wrap:wrap}
+.timer b{color:var(--ink);font-family:var(--mono);font-weight:500;font-size:12.5px}
+
+/* tally bars */
+.bar{height:8px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sunset)}
+
+/* itinerary */
+.day{display:flex;flex-direction:column;gap:6px}
+.day h4{font-family:var(--hand);font-size:21px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.day.today h4{color:var(--accent-ink)}
+.item{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;padding:10px 11px;border:1.5px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;align-items:start;background:var(--surface)}
+.item.clash{border-color:var(--warn);background:var(--warn-soft)}
+.item.outside{border-color:var(--no);background:var(--no-soft)}
+.item time{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.35}
+.item b{font-size:14px;display:block}
+.item .meta{font-size:12.5px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap}
+.item .why{grid-column:2 / -1;font-size:12px;font-weight:700}
+.item.clash .why{color:var(--warn)} .item.outside .why{color:var(--no)}
+.x{border:none;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px}
+.inline{grid-column:1 / -1;border-top:1px dashed var(--line);padding-top:8px;display:flex;flex-direction:column;gap:8px}
+
+/* sheet + toast */
+.scrim{position:absolute;inset:0;background:rgba(30,10,40,.5);display:flex;align-items:flex-end;z-index:5}
+.sheet{background:var(--surface);width:100%;border-radius:26px 26px 0 0;border-top:2px solid var(--bd);padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;max-height:85%;overflow:auto}
+.toast{position:absolute;left:14px;right:14px;bottom:78px;background:var(--ink);color:var(--surface);padding:11px 15px;border-radius:999px;border:2px solid var(--bd);font-size:13.5px;font-weight:600;opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:6}
+.toast.show{opacity:1;transform:none}
+.toast.err{background:var(--no);color:#fff;border-radius:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Installed on a phone (home-screen app): open straight into the app, demo controls below it. */
+@media (display-mode: standalone){
+  .intro,.ticker{display:none}
+  body{padding-top:max(12px,env(safe-area-inset-top,0px))}
+}
+</style>
+
+<div class="wrap">
+  <section class="intro">
+    <div class="brand"><h1>Pakka</h1><span class="sun" aria-hidden="true"></span><span class="stamp">trip mode: on ✌️</span></div>
+    <p class="tag">The group chat says “I’m in”. Pakka makes the trip <em>actually happen</em>.</p>
+    <p class="lede">For the friend who always ends up booking the villa. The squad sets how many people the trip needs and a deadline. Nobody pays unless enough friends commit, and once they do, the same plan carries the booking, the days, the shared costs and the settle-up. No flakes, no awkward chasing.</p>
+    <span class="flag">Prototype · simulated friends · no real money or bookings</span>
+  </section>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-in"><span>✈️ no flakes</span><span>🗓️ pick the dates</span><span>🤝 commit or chill</span><span>🏡 book the villa</span><span>🗺️ plan the days</span><span>💸 split it fair</span><span>📸 dump the pics</span><span>✈️ no flakes</span><span>🗓️ pick the dates</span><span>🤝 commit or chill</span><span>🏡 book the villa</span><span>🗺️ plan the days</span><span>💸 split it fair</span><span>📸 dump the pics</span></div></div>
+
+  <div class="phone"><div class="screen" id="app" aria-live="off"></div></div>
+
+  <aside class="rail" id="rail" aria-label="Demo controls"></aside>
+</div>
+
+<script type="module">const M = (() => {
+// Pakka trip model: one source of truth, a guarded phase graph, derived numbers.
+// Pure functions only. Money is integer paise. No DOM access in this file.
+
+const SCHEMA = 2;
+
+const PHASES = ['draft', 'aligning', 'committing', 'failed', 'ready_to_book', 'booked', 'on_trip', 'settling', 'closed', 'cancelled'];
+const TERMINAL = ['closed', 'cancelled'];
+
+const PHASE_LABEL = {
+  draft: 'Draft', aligning: 'Aligning', committing: 'Pact open', failed: 'Pact missed',
+  ready_to_book: 'Ready to book', booked: 'Booked', on_trip: 'On the trip',
+  settling: 'Settling up', closed: 'Closed', cancelled: 'Called off'
+};
+
+const RULES = {
+  keep: 'Free to drop until the advance is paid. After that, you still owe your share unless someone takes your spot.',
+  absorb: 'Free to drop until the advance is paid. After that, the people still going split your share.'
+};
+
+// ---------- money ----------
+const rupees = n => Math.round(n * 100);           // ₹ → paise
+const toRupees = p => p / 100;
+function fmt(p) {
+  const r = Math.round(p / 100);
+  const s = Math.abs(r).toLocaleString('en-IN');
+  return (r < 0 ? '−₹' : '₹') + s;
+}
+// Split `amount` paise across ids exactly; remainder paise go to the first ids in list order.
+function splitExact(amount, ids) {
+  if (!ids.length) return {};
+  const base = Math.floor(amount / ids.length);
+  let rem = amount - base * ids.length;
+  const out = {};
+  for (const id of ids) { out[id] = base + (rem > 0 ? 1 : 0); if (rem > 0) rem--; }
+  return out;
+}
+
+// ---------- dates (calendar dates as YYYY-MM-DD, instants as ISO with offset) ----------
+const DAY = 86400000;
+function addDays(ymd, n) {
+  const d = new Date(ymd + 'T00:00:00Z');
+  return new Date(d.getTime() + n * DAY).toISOString().slice(0, 10);
+}
+function ymdInIST(iso) {
+  return new Date(Date.parse(iso) + 330 * 60000).toISOString().slice(0, 10);
+}
+function fmtDay(ymd) {
+  const d = new Date(ymd + 'T00:00:00Z');
+  return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+}
+function fmtWhen(iso) {
+  const d = new Date(Date.parse(iso) + 330 * 60000);
+  const day = d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+  let h = d.getUTCHours(); const m = d.getUTCMinutes();
+  const ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12;
+  return `${day}, ${h}${m ? ':' + String(m).padStart(2, '0') : ''} ${ap}`;
+}
+function addHoursISO(iso, h) {
+  const t = Date.parse(iso) + h * 3600000;
+  const d = new Date(t + 330 * 60000).toISOString().slice(0, 19);
+  return d + '+05:30';
+}
+const timeToMin = t => { const [h, m] = String(t).split(':').map(Number); return h * 60 + m; };
+
+// ---------- selectors ----------
+const person = (s, id) => s.people.find(p => p.id === id);
+const organiser = s => s.people.find(p => p.organiser);
+const active = s => s.people.filter(p => p.status !== 'withdrawn' && p.status !== 'replaced');
+const committed = s => s.people.filter(p => p.status === 'in');
+const pending = s => s.people.filter(p => p.status === 'invited');
+const chosenDates = s => s.dates.options.find(o => o.id === s.dates.chosenId) || null;
+
+function tripRange(s) {
+  const o = chosenDates(s);
+  if (!o) return null;
+  return { start: o.start, nights: o.nights, end: addDays(o.start, o.nights), days: o.nights + 1 };
+}
+
+function dateTally(s) {
+  return s.dates.options.map(o => ({
+    ...o,
+    yes: s.people.filter(p => p.status !== 'withdrawn' && p.status !== 'replaced' && p.avail[o.id] === true).map(p => p.id),
+    no: s.people.filter(p => p.status !== 'withdrawn' && p.status !== 'replaced' && p.avail[o.id] === false).map(p => p.id)
+  }));
+}
+
+// Per-person all-in forecast for n people going.
+function costPerPerson(s, n) {
+  if (!n || n < 1) return null;
+  const r = tripRange(s) || { nights: s.dates.options[0]?.nights || 2, days: (s.dates.options[0]?.nights || 2) + 1 };
+  const items = s.items.reduce((a, it) => a + (it.costPP || 0), 0);
+  return Math.round(s.costs.stayTotal / n) + s.costs.transportPP + s.costs.foodPPPerDay * r.days + items;
+}
+
+function forecast(s) {
+  const going = committed(s).length;
+  const possible = going + pending(s).length;
+  const need = s.pact?.need || Math.min(6, s.people.length);
+  return {
+    going, possible, need,
+    atNeed: costPerPerson(s, need),
+    atAll: costPerPerson(s, Math.max(possible, 1)),
+    now: going ? costPerPerson(s, going) : null
+  };
+}
+
+// How many privately shared budgets the forecast at the pact line fits. Never reveals whose.
+function budgetFit(s) {
+  const target = costPerPerson(s, s.pact?.need || Math.min(6, s.people.length));
+  const shared = active(s).filter(p => p.budgetMax != null);
+  return { target, shared: shared.length, fits: shared.filter(p => p.budgetMax >= target).length, of: active(s).length };
+}
+
+function viability(s) {
+  if (!s.pact) return null;
+  const c = committed(s).length, p = pending(s).length;
+  return { committed: c, pending: p, need: s.pact.need, met: c >= s.pact.need, reachable: c + p >= s.pact.need, short: Math.max(0, s.pact.need - c) };
+}
+
+// Typical Indian villa terms refund fully only 14+ days before check-in (research report),
+// so a pact that closes later than that leaves dropouts expensive for everyone.
+const SAFE_BUFFER_DAYS = 17; // 14-day full-refund window + ~3 days to collect shares
+function deadlineBuffer(s, deadline = s.pact?.deadline) {
+  const r = tripRange(s); if (!r || !deadline) return null;
+  const days = Math.floor((Date.parse(r.start + 'T12:00:00+05:30') - Date.parse(deadline)) / DAY);
+  return { days, risky: days < SAFE_BUFFER_DAYS };
+}
+const isoAt = (ymd, hhmm) => `${ymd}T${hhmm}:00+05:30`;
+function daysUntil(s, ymd) {
+  return Math.round((Date.parse(ymd + 'T00:00:00+05:30') - Date.parse(ymdInIST(s.clock) + 'T00:00:00+05:30')) / DAY);
+}
+
+// Ledger
+function expenseShares(e) {
+  return splitExact(e.amount, e.among);
+}
+function balances(s) {
+  const b = {}; for (const p of s.people) b[p.id] = 0;
+  for (const e of s.expenses) {
+    b[e.paidBy] += e.amount;
+    const sh = expenseShares(e);
+    for (const id in sh) b[id] -= sh[id];
+  }
+  for (const pay of s.payments) { b[pay.from] += pay.amount; b[pay.to] -= pay.amount; }
+  return b;
+}
+// Greedy minimal transfers; deterministic order (largest first, then id).
+function settlements(s) {
+  const b = balances(s);
+  const debt = Object.entries(b).filter(([, v]) => v < 0).map(([id, v]) => ({ id, v: -v })).sort((a, z) => z.v - a.v || a.id.localeCompare(z.id));
+  const cred = Object.entries(b).filter(([, v]) => v > 0).map(([id, v]) => ({ id, v })).sort((a, z) => z.v - a.v || a.id.localeCompare(z.id));
+  const out = []; let i = 0, j = 0;
+  while (i < debt.length && j < cred.length) {
+    const x = Math.min(debt[i].v, cred[j].v);
+    if (x > 0) out.push({ from: debt[i].id, to: cred[j].id, amount: x });
+    debt[i].v -= x; cred[j].v -= x;
+    if (debt[i].v === 0) i++;
+    if (cred[j].v === 0) j++;
+  }
+  return out;
+}
+const allSettled = s => Object.values(balances(s)).every(v => v === 0);
+
+function spentPerPerson(s) {
+  const t = {}; for (const p of s.people) t[p.id] = 0;
+  for (const e of s.expenses) { const sh = expenseShares(e); for (const id in sh) t[id] += sh[id]; }
+  return t;
+}
+
+// Itinerary checks
+function itemFlags(s) {
+  const r = tripRange(s);
+  const flags = {};
+  for (const it of s.items) flags[it.id] = [];
+  if (r) for (const it of s.items) if (it.day > r.days) flags[it.id].push('outside');
+  const byDay = {};
+  for (const it of s.items) (byDay[it.day] ||= []).push(it);
+  for (const day in byDay) {
+    const list = byDay[day];
+    for (let a = 0; a < list.length; a++) for (let b = a + 1; b < list.length; b++) {
+      const A = list[a], B = list[b];
+      if (timeToMin(A.start) < timeToMin(B.end) && timeToMin(B.start) < timeToMin(A.end)) {
+        flags[A.id].push('clash:' + B.id); flags[B.id].push('clash:' + A.id);
+      }
+    }
+  }
+  return flags;
+}
+function tripDayToday(s) {
+  const r = tripRange(s); if (!r) return null;
+  const today = ymdInIST(s.clock);
+  const n = Math.round((Date.parse(today) - Date.parse(r.start)) / DAY) + 1;
+  return n >= 1 && n <= r.days ? n : null;
+}
+
+// ---------- the graph ----------
+// Edges carry the guard that must hold; `auto` edges fire on their own after any event.
+const EDGES = [
+  { from: 'draft', to: 'aligning', on: 'INVITE', guard: s => s.people.length >= 3 && s.dates.options.length >= 1 && s.costs.stayTotal > 0, why: 'Add at least 2 friends, one date option and a stay cost.' },
+  { from: 'aligning', to: 'committing', on: 'OPEN_PACT', guard: (s, e) => !!s.dates.chosenId && e.need >= 2 && e.need <= active(s).length && Date.parse(e.deadline) > Date.parse(s.clock) && !!RULES[e.rule], why: 'Choose dates first; the line must be between 2 and the group size and the deadline in the future.' },
+  { from: 'committing', to: 'ready_to_book', on: 'auto', guard: s => committed(s).length >= s.pact.need && Date.parse(s.clock) <= Date.parse(s.pact.deadline), why: 'Reached the line before the deadline.' },
+  { from: 'committing', to: 'failed', on: 'auto', guard: s => Date.parse(s.clock) > Date.parse(s.pact.deadline) && committed(s).length < s.pact.need, why: 'Deadline passed below the line.' },
+  { from: 'ready_to_book', to: 'committing', on: 'auto', guard: s => committed(s).length < s.pact.need && Date.parse(s.clock) <= Date.parse(s.pact.deadline), why: 'Someone pulled out before booking; back under the line.' },
+  { from: 'ready_to_book', to: 'failed', on: 'auto', guard: s => committed(s).length < s.pact.need && Date.parse(s.clock) > Date.parse(s.pact.deadline), why: 'Under the line after the deadline, before booking.' },
+  { from: 'failed', to: 'committing', on: 'REVISE_PACT', guard: (s, e) => e.need >= 2 && e.need <= active(s).length && Date.parse(e.deadline) > Date.parse(s.clock), why: 'New line must fit the group and the new deadline must be in the future.' },
+  { from: 'ready_to_book', to: 'booked', on: 'CONFIRM_BOOKING', guard: (s, e) => !!(e.reference && e.reference.trim()) && e.amountPaid > 0 && !!person(s, e.paidBy) && /^\d{4}-\d{2}-\d{2}$/.test(e.cancelBy || ''), why: 'Enter the booking reference, the amount actually paid, who paid and the cancel-by date.' },
+  { from: 'booked', to: 'on_trip', on: 'START_TRIP', guard: s => s.booking?.status === 'confirmed' && committed(s).length >= 1, why: 'Re-confirm the booking with the host first.' },
+  { from: 'booked', to: 'settling', on: 'CALL_OFF', guard: () => true, why: 'Trip called off after money moved; settle what was spent.' },
+  { from: 'on_trip', to: 'settling', on: 'END_TRIP', guard: () => true },
+  { from: 'settling', to: 'closed', on: 'CLOSE', guard: s => allSettled(s), why: 'Everyone has to be settled before closing.' },
+  { from: 'draft', to: 'cancelled', on: 'CANCEL', guard: () => true },
+  { from: 'aligning', to: 'cancelled', on: 'CANCEL', guard: () => true },
+  { from: 'committing', to: 'cancelled', on: 'CANCEL', guard: () => true },
+  { from: 'failed', to: 'cancelled', on: 'CANCEL', guard: () => true },
+  { from: 'ready_to_book', to: 'cancelled', on: 'CANCEL', guard: () => true }
+];
+
+// Which events are allowed in which phases (non-transition events).
+const ALLOWED = {
+  SET_TRIP: ['draft', 'aligning'],
+  SET_COSTS: ['draft', 'aligning', 'committing', 'failed', 'ready_to_book', 'booked'],
+  ADD_PERSON: ['draft', 'aligning', 'committing', 'failed', 'ready_to_book'],
+  ADD_DATE_OPTION: ['draft', 'aligning'],
+  SET_AVAIL: ['aligning'],
+  SET_BUDGET: ['aligning', 'committing', 'failed', 'ready_to_book'],
+  CHOOSE_DATES: ['aligning', 'booked'],
+  RESPOND: ['committing', 'ready_to_book'],
+  WITHDRAW: ['committing', 'ready_to_book', 'booked', 'on_trip'],
+  REPLACE: ['booked', 'on_trip'],
+  NUDGE: ['committing'],
+  RECHECK_BOOKING: ['booked'],
+  ADD_ITEM: ['ready_to_book', 'booked', 'on_trip'],
+  REMOVE_ITEM: ['ready_to_book', 'booked', 'on_trip'],
+  LOG_ITEM_EXPENSE: ['on_trip'],
+  ADD_EXPENSE: ['booked', 'on_trip', 'settling'],
+  REMOVE_EXPENSE: ['booked', 'on_trip', 'settling'],
+  RECORD_PAYMENT: ['booked', 'on_trip', 'settling'],
+  SET_ALBUM: ['on_trip', 'settling', 'closed'],
+  RATE: ['settling', 'closed'],
+  SET_CLOCK: PHASES,
+  SET_VIEWER: PHASES
+};
+
+function edgesFrom(phase) { return EDGES.filter(e => e.from === phase); }
+function eventAllowed(s, type) {
+  if (ALLOWED[type]) return ALLOWED[type].includes(s.phase);
+  return EDGES.some(e => e.from === s.phase && e.on === type);
+}
+function blockedReason(s, type, e = {}) {
+  const edge = EDGES.find(x => x.from === s.phase && x.on === type);
+  if (edge) return edge.guard(s, e) ? null : (edge.why || 'Not allowed yet.');
+  if (ALLOWED[type] && !ALLOWED[type].includes(s.phase)) return `Not available while the trip is "${PHASE_LABEL[s.phase]}".`;
+  return null;
+}
+
+// ---------- initial state ----------
+function blankState(clock = '2026-10-26T10:00:00+05:30') {
+  return {
+    schema: SCHEMA, seq: { p: 1 }, clock, viewer: 'p1', phase: 'draft',
+    trip: { name: 'Coorg long weekend', destination: 'Coorg, Karnataka', occasion: 'Long weekend' },
+    people: [{ id: 'p1', name: 'Yash', organiser: true, status: 'in', budgetMax: null, avail: {} }],
+    dates: { options: [], chosenId: null },
+    costs: { stayTotal: rupees(36000), advance: rupees(12000), transportPP: rupees(1100), foodPPPerDay: rupees(900) },
+    pact: null, booking: null, items: [], expenses: [], payments: [],
+    album: '', pulse: {}, log: []
+  };
+}
+
+// ---------- reducer ----------
+const nextId = (s, prefix) => { s.seq[prefix] = (s.seq[prefix] || 0) + 1; return prefix + s.seq[prefix]; };
+const clone = x => JSON.parse(JSON.stringify(x));
+const name = (s, id) => person(s, id)?.name || 'Someone';
+
+function fail(state, msg) { return { state, error: msg, effects: [] }; }
+
+function dispatch(state, ev) {
+  if (!ev || !ev.type) return fail(state, 'Unknown action.');
+  if (TERMINAL.includes(state.phase) && !['SET_CLOCK', 'SET_VIEWER', 'RATE', 'SET_ALBUM'].includes(ev.type)) return fail(state, 'This trip is finished. Start a new one to plan again.');
+  if (!eventAllowed(state, ev.type)) return fail(state, blockedReason(state, ev.type, ev) || `"${ev.type}" isn't possible right now.`);
+  const edge = EDGES.find(x => x.from === state.phase && x.on === ev.type);
+  if (edge && !edge.guard(state, ev)) return fail(state, edge.why || 'Not allowed yet.');
+
+  const s = clone(state);
+  const fx = [];              // human-readable downstream effects
+  let summary = '';
+  const before = { going: committed(state).length, pp: forecast(state).now, bal: balances(state) };
+
+  switch (ev.type) {
+    case 'SET_VIEWER': {
+      if (!person(s, ev.id)) return fail(state, 'No such person.');
+      s.viewer = ev.id; return { state: s, error: null, effects: [] };
+    }
+    case 'SET_CLOCK': {
+      if (!(Date.parse(ev.clock) > 0)) return fail(state, 'Invalid time.');
+      s.clock = ev.clock; summary = `Time moved to ${fmtWhen(ev.clock)}`; break;
+    }
+    case 'SET_TRIP': {
+      const nm = (ev.name || '').trim(), dest = (ev.destination || '').trim();
+      if (!nm || !dest) return fail(state, 'Give the trip a name and a destination.');
+      s.trip.name = nm.slice(0, 60); s.trip.destination = dest.slice(0, 60);
+      summary = 'Trip details updated'; break;
+    }
+    case 'SET_COSTS': {
+      const c = { ...s.costs, ...ev.costs };
+      for (const k of ['stayTotal', 'advance', 'transportPP', 'foodPPPerDay']) {
+        if (!Number.isInteger(c[k]) || c[k] < 0) return fail(state, 'Costs must be whole amounts of zero or more.');
+      }
+      if (c.stayTotal <= 0) return fail(state, 'Enter what the stay costs.');
+      if (c.advance > c.stayTotal) return fail(state, 'The advance can’t be more than the stay total.');
+      if (s.booking && c.advance !== s.costs.advance) return fail(state, 'The advance is already paid. Change the stay total instead.');
+      const oldStay = s.costs.stayTotal;
+      s.costs = c;
+      summary = 'Costs updated';
+      if (c.stayTotal !== oldStay) fx.push(`Stay total ${fmt(oldStay)} → ${fmt(c.stayTotal)}`);
+      if (s.booking && c.stayTotal !== oldStay) fx.push(`Balance due at check-in is now ${fmt(c.stayTotal - c.advance)}`);
+      break;
+    }
+    case 'ADD_PERSON': {
+      const nm = (ev.name || '').trim();
+      if (!nm) return fail(state, 'Enter a name.');
+      if (s.people.some(p => p.name.toLowerCase() === nm.toLowerCase() && p.status !== 'replaced')) return fail(state, `${nm} is already in the group.`);
+      if (active(s).length >= 12) return fail(state, 'Pakka is built for groups of up to 12.');
+      const id = nextId(s, 'p');
+      s.people.push({ id, name: nm.slice(0, 24), organiser: false, status: 'invited', budgetMax: null, avail: {} });
+      summary = `${nm} added to the group`; break;
+    }
+    case 'ADD_DATE_OPTION': {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(ev.start || '')) return fail(state, 'Pick a start date.');
+      const nights = Number(ev.nights);
+      if (!Number.isInteger(nights) || nights < 1 || nights > 7) return fail(state, 'Nights must be between 1 and 7.');
+      if (ev.start < ymdInIST(s.clock)) return fail(state, 'That date has already passed.');
+      if (s.dates.options.some(o => o.start === ev.start && o.nights === nights)) return fail(state, 'That option is already there.');
+      const id = nextId(s, 'd');
+      s.dates.options.push({ id, start: ev.start, nights });
+      s.dates.options.sort((a, b) => a.start.localeCompare(b.start));
+      summary = `Date option added: ${fmtDay(ev.start)}, ${nights} night${nights > 1 ? 's' : ''}`; break;
+    }
+    case 'INVITE': {
+      for (const p of s.people) if (!p.organiser && p.status !== 'invited') p.status = 'invited';
+      summary = 'Invite link shared with the group';
+      fx.push(`${s.people.length - 1} friends can now mark dates and a private budget`); break;
+    }
+    case 'SET_AVAIL': {
+      const p = person(s, ev.id), o = s.dates.options.find(x => x.id === ev.option);
+      if (!p || !o) return fail(state, 'Unknown person or date option.');
+      p.avail[o.id] = !!ev.value;
+      summary = `${p.name} ${ev.value ? 'can' : 'can’t'} make ${fmtDay(o.start)}`; break;
+    }
+    case 'SET_BUDGET': {
+      const p = person(s, ev.id); if (!p) return fail(state, 'Unknown person.');
+      if (ev.value != null && (!Number.isInteger(ev.value) || ev.value < rupees(500))) return fail(state, 'Enter a budget of at least ₹500, or leave it blank.');
+      p.budgetMax = ev.value ?? null;
+      summary = `${p.name} ${ev.value == null ? 'cleared' : 'set'} a private budget`;
+      const f = budgetFit(s); fx.push(`Forecast ${fmt(f.target)} fits ${f.fits} of ${f.shared} budgets shared`); break;
+    }
+    case 'CHOOSE_DATES': {
+      const o = s.dates.options.find(x => x.id === ev.option); if (!o) return fail(state, 'Unknown date option.');
+      if (o.id === s.dates.chosenId) return fail(state, 'Those dates are already chosen.');
+      const prev = chosenDates(s);
+      s.dates.chosenId = o.id;
+      summary = `Dates set: ${fmtDay(o.start)} → ${fmtDay(addDays(o.start, o.nights))}`;
+      if (prev) fx.push(`Changed from ${fmtDay(prev.start)}, ${prev.nights} nights`);
+      if (s.booking) {
+        s.booking.status = 'needs_recheck';
+        s.booking.note = `Dates changed from ${fmtDay(prev.start)} to ${fmtDay(o.start)}. Confirm the new dates with the host before the trip.`;
+        fx.push('Booking flagged: re-confirm with the host');
+      }
+      const out = s.items.filter(it => it.day > o.nights + 1);
+      if (out.length) fx.push(`${out.length} plan item${out.length > 1 ? 's fall' : ' falls'} outside the new dates`);
+      if (prev && prev.nights !== o.nights) fx.push(`Per-person forecast now ${fmt(costPerPerson(s, committed(s).length || 1))}`);
+      break;
+    }
+    case 'OPEN_PACT': {
+      s.pact = { need: ev.need, deadline: ev.deadline, rule: ev.rule, openedAt: s.clock };
+      s.phase = 'committing';
+      summary = `Pact opened: needs ${ev.need} by ${fmtWhen(ev.deadline)}`;
+      fx.push(`Each share ${fmt(costPerPerson(s, active(s).length))}–${fmt(costPerPerson(s, ev.need))} depending on headcount`); break;
+    }
+    case 'REVISE_PACT': {
+      s.pact.need = ev.need; s.pact.deadline = ev.deadline; s.phase = 'committing';
+      summary = `Pact revised: needs ${ev.need} by ${fmtWhen(ev.deadline)}`;
+      fx.push('Only people who haven’t said no are asked again'); break;
+    }
+    case 'RESPOND': {
+      const p = person(s, ev.id); if (!p) return fail(state, 'Unknown person.');
+      if (p.organiser) return fail(state, 'The organiser is already in.');
+      if (!['invited', 'in', 'out'].includes(p.status)) return fail(state, `${p.name} has already left the trip.`);
+      if (!['in', 'out'].includes(ev.answer)) return fail(state, 'Answer in or out.');
+      if (p.status === ev.answer) return fail(state, `${p.name} already said ${ev.answer === 'in' ? 'yes' : 'no'}.`);
+      if (Date.parse(s.clock) > Date.parse(s.pact.deadline) && s.phase === 'committing') return fail(state, 'The deadline has passed.');
+      p.status = ev.answer;
+      summary = ev.answer === 'in' ? `${p.name} committed` : `${p.name} can’t make it`; break;
+    }
+    case 'WITHDRAW': {
+      const p = person(s, ev.id); if (!p) return fail(state, 'Unknown person.');
+      if (p.organiser) return fail(state, 'The organiser can’t withdraw. Call the trip off instead.');
+      if (p.status !== 'in') return fail(state, `${p.name} hasn’t committed, so there’s nothing to withdraw.`);
+      p.status = 'withdrawn';
+      summary = `${p.name} pulled out`;
+      const adv = s.expenses.find(e => e.source === 'advance');
+      if (adv) {
+        if (s.pact.rule === 'absorb') {
+          adv.among = adv.among.filter(id => id !== p.id);
+          fx.push(`By the agreed rule, ${p.name}'s share of the advance moves to the ${adv.among.length} still going (now ${fmt(Math.ceil(adv.amount / adv.among.length))} each)`);
+        } else {
+          fx.push(`By the agreed rule, ${p.name} still owes ${fmt(expenseShares(adv)[p.id] || 0)} of the advance unless someone takes the spot`);
+        }
+      } else fx.push('No money had moved, so there is nothing to settle');
+      break;
+    }
+    case 'REPLACE': {
+      const old = person(s, ev.id); const nm = (ev.name || '').trim();
+      if (!old || old.status !== 'withdrawn') return fail(state, 'Only someone who pulled out can be replaced.');
+      if (!nm) return fail(state, 'Enter the new person’s name.');
+      if (s.people.some(p => p.name.toLowerCase() === nm.toLowerCase() && p.status !== 'replaced')) return fail(state, `${nm} is already in the group.`);
+      const id = nextId(s, 'p');
+      s.people.push({ id, name: nm.slice(0, 24), organiser: false, status: 'in', budgetMax: null, avail: {} });
+      old.status = 'replaced'; old.replacedBy = id;
+      for (const e of s.expenses) if (e.source === 'advance' && e.among.includes(old.id)) e.among = e.among.map(x => x === old.id ? id : x);
+      summary = `${nm} takes ${old.name}'s spot`;
+      fx.push(`${old.name}'s share of the advance moves to ${nm}`); break;
+    }
+    case 'NUDGE': {
+      summary = `Pakka reminded ${pending(s).length} people who haven’t answered`; break;
+    }
+    case 'CONFIRM_BOOKING': {
+      const r = tripRange(s);
+      s.booking = {
+        status: 'confirmed', provider: (ev.provider || 'Direct with host').trim().slice(0, 40), reference: ev.reference.trim().slice(0, 40),
+        amountPaid: ev.amountPaid, paidBy: ev.paidBy, cancelBy: ev.cancelBy, confirmedAt: s.clock,
+        forStart: r.start, forNights: r.nights, note: ''
+      };
+      const among = committed(s).map(p => p.id);
+      s.expenses.push({ id: nextId(s, 'e'), label: `Stay advance · ${s.booking.provider}`, amount: ev.amountPaid, paidBy: ev.paidBy, among, at: s.clock, source: 'advance' });
+      s.phase = 'booked';
+      summary = `${name(s, ev.paidBy)} confirmed the booking (${s.booking.reference})`;
+      fx.push(`Advance ${fmt(ev.amountPaid)} split across ${among.length}: ${fmt(Math.ceil(ev.amountPaid / among.length))} each`);
+      fx.push(`Balance due at check-in: ${fmt(s.costs.stayTotal - ev.amountPaid)}`);
+      if (ev.amountPaid !== s.costs.advance) { s.costs.advance = ev.amountPaid; fx.push('Planned advance updated to the amount actually paid'); }
+      break;
+    }
+    case 'RECHECK_BOOKING': {
+      if (s.booking.status !== 'needs_recheck') return fail(state, 'The booking doesn’t need re-checking.');
+      const ref = (ev.reference || s.booking.reference).trim();
+      if (!ref) return fail(state, 'Enter the booking reference the host confirmed.');
+      const r = tripRange(s);
+      s.booking.status = 'confirmed'; s.booking.reference = ref.slice(0, 40); s.booking.forStart = r.start; s.booking.forNights = r.nights; s.booking.note = '';
+      summary = `Host re-confirmed the booking for ${fmtDay(r.start)}`; break;
+    }
+    case 'ADD_ITEM': {
+      const r = tripRange(s); const title = (ev.title || '').trim();
+      if (!title) return fail(state, 'Give the plan item a title.');
+      if (!Number.isInteger(ev.day) || ev.day < 1 || ev.day > r.days) return fail(state, `Pick a day between 1 and ${r.days}.`);
+      if (!/^\d{2}:\d{2}$/.test(ev.start || '') || !/^\d{2}:\d{2}$/.test(ev.end || '')) return fail(state, 'Enter start and end times.');
+      if (timeToMin(ev.end) <= timeToMin(ev.start)) return fail(state, 'End time must be after the start time.');
+      if (ev.costPP != null && (!Number.isInteger(ev.costPP) || ev.costPP < 0)) return fail(state, 'Cost per person must be zero or more.');
+      const id = nextId(s, 'i');
+      s.items.push({ id, day: ev.day, start: ev.start, end: ev.end, title: title.slice(0, 60), place: (ev.place || '').trim().slice(0, 80), costPP: ev.costPP || 0, expenseId: null });
+      s.items.sort((a, b) => a.day - b.day || a.start.localeCompare(b.start));
+      summary = `Added "${title}" on day ${ev.day}`;
+      const clashes = itemFlags(s)[id].filter(f => f.startsWith('clash'));
+      if (clashes.length) fx.push(`Overlaps with ${clashes.length} other item${clashes.length > 1 ? 's' : ''} on day ${ev.day}`);
+      if (ev.costPP) fx.push(`Per-person forecast +${fmt(ev.costPP)}`);
+      break;
+    }
+    case 'REMOVE_ITEM': {
+      const it = s.items.find(x => x.id === ev.id); if (!it) return fail(state, 'That item is already gone.');
+      if (it.expenseId) return fail(state, 'Its cost is already in the ledger. Remove that expense first.');
+      s.items = s.items.filter(x => x.id !== ev.id);
+      summary = `Removed "${it.title}"`; break;
+    }
+    case 'LOG_ITEM_EXPENSE': {
+      const it = s.items.find(x => x.id === ev.id); if (!it) return fail(state, 'Unknown plan item.');
+      if (it.expenseId) return fail(state, 'This one is already logged.');
+      if (!it.costPP) return fail(state, 'This item has no cost to log.');
+      const among = (ev.among || []).filter(id => person(s, id)?.status === 'in');
+      if (!among.length) return fail(state, 'Pick who took part.');
+      if (person(s, ev.paidBy)?.status !== 'in') return fail(state, 'Pick who paid.');
+      const eid = nextId(s, 'e');
+      s.expenses.push({ id: eid, label: it.title, amount: it.costPP * among.length, paidBy: ev.paidBy, among, at: s.clock, source: 'item:' + it.id });
+      it.expenseId = eid;
+      summary = `${name(s, ev.paidBy)} paid for "${it.title}"`;
+      fx.push(`${fmt(it.costPP * among.length)} split across the ${among.length} who went`); break;
+    }
+    case 'ADD_EXPENSE': {
+      const label = (ev.label || '').trim();
+      if (!label) return fail(state, 'Say what the expense was for.');
+      if (!Number.isInteger(ev.amount) || ev.amount <= 0) return fail(state, 'Enter an amount above zero.');
+      if (!person(s, ev.paidBy) || ['withdrawn', 'replaced'].includes(person(s, ev.paidBy).status) && !ev.allowFormer) return fail(state, 'Pick who paid.');
+      const among = [...new Set(ev.among || [])].filter(id => person(s, id));
+      if (!among.length) return fail(state, 'Pick at least one person to split with.');
+      s.expenses.push({ id: nextId(s, 'e'), label: label.slice(0, 60), amount: ev.amount, paidBy: ev.paidBy, among, at: s.clock, source: ev.source || 'manual' });
+      summary = `${name(s, ev.paidBy)} paid ${fmt(ev.amount)} for ${label}`;
+      fx.push(`Split across ${among.length}: about ${fmt(Math.ceil(ev.amount / among.length))} each`); break;
+    }
+    case 'REMOVE_EXPENSE': {
+      const e = s.expenses.find(x => x.id === ev.id); if (!e) return fail(state, 'That expense is already gone.');
+      if (e.source === 'advance') return fail(state, 'The advance is tied to the booking and can’t be removed here.');
+      s.expenses = s.expenses.filter(x => x.id !== ev.id);
+      for (const it of s.items) if (it.expenseId === ev.id) it.expenseId = null;
+      summary = `Removed expense "${e.label}"`; break;
+    }
+    case 'RECORD_PAYMENT': {
+      if (!person(s, ev.from) || !person(s, ev.to) || ev.from === ev.to) return fail(state, 'Pick who paid whom.');
+      if (!Number.isInteger(ev.amount) || ev.amount <= 0) return fail(state, 'Enter an amount above zero.');
+      s.payments.push({ id: nextId(s, 'm'), from: ev.from, to: ev.to, amount: ev.amount, at: s.clock, ref: (ev.ref || '').trim().slice(0, 30) });
+      summary = `${name(s, ev.from)} marked ${fmt(ev.amount)} paid to ${name(s, ev.to)}`;
+      if (allSettled(s)) fx.push('Everyone is settled'); break;
+    }
+    case 'START_TRIP': { s.phase = 'on_trip'; summary = 'Trip started'; break; }
+    case 'END_TRIP': { s.phase = 'settling'; summary = 'Trip ended; time to settle up'; fx.push(`${settlements(s).length} transfer${settlements(s).length === 1 ? '' : 's'} to settle everyone`); break; }
+    case 'CALL_OFF': { s.phase = 'settling'; summary = 'Trip called off after booking'; fx.push('The advance stays split by the agreed rule; settle what was paid'); break; }
+    case 'CLOSE': { s.phase = 'closed'; summary = 'Trip closed'; break; }
+    case 'CANCEL': { s.phase = 'cancelled'; summary = 'Plan called off before any money moved'; break; }
+    case 'SET_ALBUM': {
+      const url = (ev.url || '').trim();
+      if (url && !/^https:\/\/[^\s]+$/.test(url)) return fail(state, 'Paste a full https:// link.');
+      s.album = url.slice(0, 300); summary = url ? 'Shared album linked' : 'Album link removed'; break;
+    }
+    case 'RATE': {
+      if (!person(s, ev.id) || !(ev.score >= 1 && ev.score <= 5)) return fail(state, 'Rate from 1 to 5.');
+      s.pulse[ev.id] = ev.score; summary = `${name(s, ev.id)} rated the trip`; break;
+    }
+    case 'INVITE_NOOP': break;
+    default: return fail(state, `Unknown action "${ev.type}".`);
+  }
+
+  // the matched edge (if any) is the single place a requested transition happens
+  if (edge) s.phase = edge.to;
+
+  // auto transitions until stable
+  for (let guard = 0; guard < 5; guard++) {
+    const auto = EDGES.find(x => x.from === s.phase && x.on === 'auto' && x.guard(s));
+    if (!auto) break;
+    s.phase = auto.to;
+    fx.push(auto.to === 'ready_to_book' ? `It's pakka: ${committed(s).length} committed. Booking unlocked`
+      : auto.to === 'failed' ? `Deadline passed at ${committed(s).length} of ${s.pact.need}. Nobody owes anything`
+      : auto.to === 'committing' ? `Back under the line (${committed(s).length} of ${s.pact.need}). Booking locked again` : auto.why);
+  }
+
+  // generic downstream effects
+  const goingNow = committed(s).length;
+  if (goingNow !== before.going && !['CONFIRM_BOOKING'].includes(ev.type)) {
+    fx.push(`Going: ${before.going} → ${goingNow}`);
+    if (goingNow) fx.push(`Per-person forecast ${before.pp ? fmt(before.pp) + ' → ' : ''}${fmt(costPerPerson(s, goingNow))}`);
+    const v = viability(s);
+    if (v && !v.met && !v.reachable && ['committing'].includes(s.phase)) fx.push(`Can’t reach ${v.need} with the people left. Lower the line or call it off`);
+  }
+  if (['WITHDRAW', 'REPLACE'].includes(ev.type)) {
+    const after = balances(s);
+    for (const id in after) if (after[id] !== (before.bal[id] ?? 0) && after[id] > 0 && (before.bal[id] ?? 0) <= 0) fx.push(`${name(s, id)} is now owed ${fmt(after[id])}`);
+  }
+
+  if (summary) s.log.unshift({ id: nextId(s, 'l'), at: s.clock, by: s.viewer, type: ev.type, summary, effects: fx });
+  if (s.log.length > 60) s.log.length = 60;
+  return { state: s, error: null, effects: fx };
+}
+
+// Apply many events; throws on the first error (used by presets and tests).
+function run(state, events) {
+  let s = state;
+  for (const e of events) {
+    const r = dispatch(s, e);
+    if (r.error) throw new Error(`${e.type}: ${r.error}`);
+    s = r.state;
+  }
+  return s;
+}
+
+// ---------- invariants ----------
+function checkInvariants(s) {
+  const v = [];
+  if (s.schema !== SCHEMA) v.push('schema mismatch');
+  if (!PHASES.includes(s.phase)) v.push('unknown phase ' + s.phase);
+  const ids = s.people.map(p => p.id);
+  if (new Set(ids).size !== ids.length) v.push('duplicate person ids');
+  if (s.people.filter(p => p.organiser).length !== 1) v.push('exactly one organiser required');
+  if (!s.people.every(p => ['invited', 'in', 'out', 'withdrawn', 'replaced'].includes(p.status))) v.push('invalid person status');
+  const sum = Object.values(balances(s)).reduce((a, b) => a + b, 0);
+  if (sum !== 0) v.push('balances do not sum to zero: ' + sum);
+  for (const e of s.expenses) {
+    if (!(e.amount > 0) || !Number.isInteger(e.amount)) v.push('bad expense amount ' + e.id);
+    if (!e.among.length) v.push('expense with nobody to split ' + e.id);
+    if (!person(s, e.paidBy)) v.push('expense payer missing ' + e.id);
+    const t = Object.values(expenseShares(e)).reduce((a, b) => a + b, 0);
+    if (t !== e.amount) v.push('expense shares do not add up ' + e.id);
+  }
+  for (const p of s.payments) if (!(p.amount > 0) || p.from === p.to) v.push('bad payment ' + p.id);
+  const booked = ['booked', 'on_trip', 'settling', 'closed'];
+  const adv = s.expenses.filter(e => e.source === 'advance');
+  if (s.booking) {
+    if (!s.booking.reference) v.push('booking without reference');
+    if (adv.length !== 1 || adv[0].amount !== s.booking.amountPaid) v.push('advance expense does not match booking');
+    if (!booked.includes(s.phase)) v.push('booking exists in phase ' + s.phase);
+  } else {
+    if (adv.length) v.push('advance expense without booking');
+    if (['booked', 'on_trip'].includes(s.phase)) v.push('phase ' + s.phase + ' without booking');
+  }
+  if (s.phase === 'ready_to_book' && committed(s).length < s.pact.need) v.push('ready_to_book below the line');
+  if (s.phase === 'failed' && !(Date.parse(s.clock) > Date.parse(s.pact.deadline))) v.push('failed before the deadline');
+  if (['committing', 'failed', 'ready_to_book'].includes(s.phase) && !s.pact) v.push('pact phase without pact');
+  if (s.phase === 'cancelled' && s.expenses.length) v.push('cancelled with money in the ledger');
+  if (s.phase === 'closed' && !allSettled(s)) v.push('closed with open balances');
+  if (s.phase === 'on_trip' && s.booking?.status !== 'confirmed') v.push('on trip without a confirmed booking');
+  for (const it of s.items) if (it.expenseId && !s.expenses.some(e => e.id === it.expenseId)) v.push('item linked to missing expense ' + it.id);
+  return v;
+}
+
+// ---------- next actions (role aware) ----------
+function nextActions(s, viewerId = s.viewer) {
+  const me = person(s, viewerId); if (!me) return [];
+  const org = me.organiser; const a = [];
+  const v = viability(s);
+  switch (s.phase) {
+    case 'draft':
+      if (org) a.push({ tab: 'align', text: s.people.length < 3 ? 'Add the friends you want on this trip' : s.dates.options.length ? 'Share the invite so friends can mark dates' : 'Add one or two date options' });
+      break;
+    case 'aligning':
+      if (!Object.keys(me.avail).length) a.push({ tab: 'align', text: 'Mark which dates you can make' });
+      if (me.budgetMax == null) a.push({ tab: 'align', text: 'Set your private budget (only you see the number)' });
+      if (org) a.push({ tab: s.dates.chosenId ? 'commit' : 'align', text: s.dates.chosenId ? 'Open the pact: set the line and the deadline' : 'Pick the dates most people can make' });
+      break;
+    case 'committing':
+      if (me.status === 'invited') a.push({ tab: 'commit', text: `Decide by ${fmtWhen(s.pact.deadline)}: in or out` });
+      if (org) a.push({ tab: 'commit', text: v.reachable ? `${v.short} more to go. Pakka can remind the ${v.pending} who haven’t answered` : `Can’t reach ${v.need} now. Lower the line or call it off` });
+      break;
+    case 'failed':
+      if (org) a.push({ tab: 'commit', text: 'The pact missed. Lower the line, give more time, or call it off' });
+      else a.push({ tab: 'commit', text: 'The pact missed. Nobody owes anything' });
+      break;
+    case 'ready_to_book':
+      if (org) a.push({ tab: 'book', text: 'Book the stay, then record the reference and what you paid' });
+      else a.push({ tab: 'book', text: 'It’s pakka. Waiting for the booking to be confirmed' });
+      if (me.status === 'invited') a.push({ tab: 'commit', text: 'There’s still room: say in or out' });
+      break;
+    case 'booked': {
+      if (s.booking.status === 'needs_recheck' && org) a.push({ tab: 'book', text: 'Dates changed: re-confirm the booking with the host' });
+      const owe = settlements(s).filter(t => t.from === me.id);
+      for (const t of owe) a.push({ tab: 'money', text: `Pay ${name(s, t.to)} ${fmt(t.amount)} for your share` });
+      if (org) {
+        const unpaid = settlements(s).filter(t => t.to === me.id).length;
+        if (unpaid) a.push({ tab: 'money', text: `${unpaid} share${unpaid > 1 ? 's' : ''} still to come in` });
+        a.push({ tab: 'plan', text: s.items.length ? 'Plan is taking shape. Start the trip when you leave' : 'Sketch the plan for each day' });
+      }
+      break;
+    }
+    case 'on_trip': {
+      const d = tripDayToday(s);
+      a.push({ tab: 'plan', text: d ? `Day ${d}: see today’s plan` : 'See the plan' });
+      a.push({ tab: 'money', text: 'Log costs as you go, split only among who joined' });
+      break;
+    }
+    case 'settling': {
+      const owe = settlements(s).filter(t => t.from === me.id);
+      for (const t of owe) a.push({ tab: 'money', text: `Pay ${name(s, t.to)} ${fmt(t.amount)}` });
+      if (!owe.length) a.push({ tab: 'money', text: allSettled(s) ? (org ? 'Everyone’s settled. Close the trip' : 'You’re settled') : 'Waiting on others to settle' });
+      if (!s.pulse[me.id]) a.push({ tab: 'money', text: 'Rate the trip in one tap' });
+      break;
+    }
+    case 'closed': a.push({ tab: 'money', text: org ? 'Plan the next one with this group' : 'Trip closed' }); break;
+    case 'cancelled': a.push({ tab: 'home', text: 'This plan was called off' }); break;
+  }
+  return a;
+}
+
+// New trip seeded from a closed one: same people, fresh everything else.
+function planAgain(s) {
+  const n = blankState(s.clock);
+  n.trip = { name: 'Next trip', destination: s.trip.destination, occasion: s.trip.occasion };
+  const keep = s.people.filter(p => !['withdrawn', 'replaced', 'out'].includes(p.status));
+  n.people = keep.map(p => ({ id: p.id, name: p.name, organiser: p.organiser, status: p.organiser ? 'in' : 'invited', budgetMax: null, avail: {} }));
+  n.seq = { ...s.seq }; n.viewer = organiser(s).id;
+  n.costs = { ...s.costs, stayTotal: s.costs.stayTotal, advance: s.costs.advance };
+  n.log = [{ id: nextId(n, 'l'), at: s.clock, by: n.viewer, type: 'PLAN_AGAIN', summary: `New trip started with ${n.people.length} from "${s.trip.name}"`, effects: ['Costs carried over as a starting point; budgets and dates start fresh'] }];
+  return n;
+}
+
+return { SCHEMA, PHASES, TERMINAL, PHASE_LABEL, RULES, rupees, toRupees, fmt, splitExact, addDays, ymdInIST, fmtDay, fmtWhen, addHoursISO, person, organiser, active, committed, pending, chosenDates, tripRange, dateTally, costPerPerson, forecast, budgetFit, viability, SAFE_BUFFER_DAYS, deadlineBuffer, isoAt, daysUntil, expenseShares, balances, settlements, allSettled, spentPerPerson, itemFlags, tripDayToday, EDGES, edgesFrom, eventAllowed, blockedReason, blankState, dispatch, run, checkInvariants, nextActions, planAgain };
+})();
+
+const I = (() => {
+// Integration adapters. Every external action is a link-out the person completes
+// themselves; nothing here reports an external action as done.
+// Status of each integration lives in INTEGRATIONS so the UI and docs agree.
+const { addDays, fmt, fmtDay, tripRange, committed } = M;
+
+const INTEGRATIONS = [
+  { id: 'whatsapp', name: 'WhatsApp share', cls: 1, how: 'wa.me/?text= link (official click-to-chat). You pick the group; Pakka never posts for you.', live: true },
+  { id: 'maps', name: 'Google Maps', cls: 1, how: 'Maps URLs with api=1 (official, no key).', live: true },
+  { id: 'calendar', name: 'Google Calendar', cls: 1, how: 'Event template link (works, but undocumented by Google). The Calendar API would need Google sign-in.', live: true },
+  { id: 'stays', name: 'Airbnb / Booking.com search', cls: 4, how: 'Search links with dates and guests (URL formats are undocumented). Airbnb has no open API or affiliate programme; Booking.com data needs a managed partnership. The booking is recorded by hand.', live: true },
+  { id: 'upi', name: 'UPI payment', cls: 3, how: 'Friend-to-friend collect requests stopped on 1 Oct 2025, so friends pay the organiser directly in any UPI app and mark it paid. Holding money (UPI Reserve Pay) is merchant-only and needs a licensed partner.', live: true },
+  { id: 'photos', name: 'Google Photos album', cls: 4, how: 'Paste a shared-album link. Apps lost shared-album access in March 2025.', live: true },
+  { id: 'weather', name: 'Weather', cls: 3, how: 'Not in this build: needs a server proxy and a commercial licence (Open-Meteo free tier is non-commercial).', live: false },
+  { id: 'splitwise', name: 'Splitwise', cls: 3, how: 'Not needed: Pakka keeps one ledger. Splitwise asks commercial apps to contact them.', live: false }
+];
+
+const enc = encodeURIComponent;
+const ymd = d => d.replaceAll('-', '');
+
+function waShare(text) {
+  return 'https://wa.me/?text=' + enc(text);
+}
+function mapsSearch(query) {
+  return 'https://www.google.com/maps/search/?api=1&query=' + enc(query) + '&utm_source=pakka';
+}
+function mapsDirections(destination, mode = 'driving') {
+  return 'https://www.google.com/maps/dir/?api=1&destination=' + enc(destination) + '&travelmode=' + mode + '&utm_source=pakka';
+}
+// All-day event: end date is exclusive (the day after the last day).
+function calendarTemplate({ title, start, endExclusive, details = '', location = '' }) {
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + enc(title)
+    + '&dates=' + ymd(start) + '/' + ymd(endExclusive)
+    + '&details=' + enc(details)
+    + '&location=' + enc(location);
+}
+function airbnbSearch({ place, checkin, checkout, adults }) {
+  return 'https://www.airbnb.co.in/s/' + enc(place) + '/homes?checkin=' + checkin + '&checkout=' + checkout + '&adults=' + adults;
+}
+function bookingSearch({ place, checkin, checkout, adults }) {
+  return 'https://www.booking.com/searchresults.html?ss=' + enc(place) + '&checkin=' + checkin + '&checkout=' + checkout + '&group_adults=' + adults + '&no_rooms=' + Math.max(1, Math.ceil(adults / 2));
+}
+
+// Trip-level helpers that read the shared model.
+function tripCalendarLink(s) {
+  const r = tripRange(s); if (!r) return null;
+  const going = committed(s).map(p => p.name).join(', ');
+  const ref = s.booking ? `Booking ${s.booking.reference} (${s.booking.provider}). ` : '';
+  return calendarTemplate({ title: s.trip.name, start: r.start, endExclusive: addDays(r.end, 1), details: `${ref}Going: ${going}. Planned in Pakka.`, location: s.trip.destination });
+}
+function staySearchLinks(s) {
+  const r = tripRange(s); if (!r) return [];
+  const q = { place: s.trip.destination, checkin: r.start, checkout: r.end, adults: Math.max(committed(s).length, 1) };
+  return [{ label: 'Airbnb', href: airbnbSearch(q) }, { label: 'Booking.com', href: bookingSearch(q) }];
+}
+function inviteMessage(s) {
+  const r = tripRange(s);
+  if (s.pact && ['committing', 'failed', 'ready_to_book'].includes(s.phase)) {
+    return `${s.trip.name} happens only if ${s.pact.need} of us commit. Nobody pays unless we hit ${s.pact.need}. In or out on Pakka 👇`;
+  }
+  return `Planning ${s.trip.name} (${s.trip.destination}). Mark the dates you can make and a private budget on Pakka. Nobody sees your number 👇`;
+}
+function shareRequestMessage(s, from, amount) {
+  return `Hi ${from}, your share of the ${s.trip.name} stay advance is ${fmt(amount)}. Pay via any UPI app and tap "I've paid" on Pakka.`;
+}
+function dayLabel(s, day) {
+  const r = tripRange(s); if (!r) return `Day ${day}`;
+  return `Day ${day} · ${fmtDay(addDays(r.start, day - 1))}`;
+}
+
+return { INTEGRATIONS, waShare, mapsSearch, mapsDirections, calendarTemplate, airbnbSearch, bookingSearch, tripCalendarLink, staySearchLinks, inviteMessage, shareRequestMessage, dayLabel };
+})();
+
+const P = (() => {
+// Demo scenarios. Each is built by replaying events through the reducer,
+// so every preset is a state the real app can reach.
+const { blankState, run, rupees, addHoursISO, dispatch, committed } = M;
+
+const FRIENDS = ['Rohan', 'Priya', 'Arjun', 'Meera', 'Kabir', 'Sana', 'Dev'];
+const T0 = '2026-10-19T10:00:00+05:30';            // Mon 19 Oct, 10 am IST
+const DEADLINE = '2026-10-21T18:00:00+05:30'; // Wed 21 Oct, 6 pm: 22 days before check-in
+
+function draft() {
+  return run(blankState(T0), [
+    ...FRIENDS.map(name => ({ type: 'ADD_PERSON', name })),
+    { type: 'ADD_DATE_OPTION', start: '2026-11-13', nights: 3 },
+    { type: 'ADD_DATE_OPTION', start: '2026-11-20', nights: 2 },
+    { type: 'ADD_DATE_OPTION', start: '2026-11-27', nights: 3 }
+  ]);
+}
+
+const AVAIL = { // person -> [d1, d2, d3]
+  p1: [1, 1, 0], p2: [1, 0, 1], p3: [1, 1, 1], p4: [1, 0, 0], p5: [1, 1, 0], p6: [0, 1, 1], p7: [1, 1, 1], p8: [1, 0, 1]
+};
+const BUDGETS = { p1: 12000, p2: 11000, p3: 15000, p5: 9500, p6: 12000, p8: 10000 };
+
+function aligning() {
+  let s = run(draft(), [{ type: 'INVITE' }]);
+  const opts = s.dates.options.map(o => o.id);
+  const ev = [];
+  for (const [pid, arr] of Object.entries(AVAIL)) arr.forEach((v, i) => ev.push({ type: 'SET_AVAIL', id: pid, option: opts[i], value: !!v }));
+  for (const [pid, r] of Object.entries(BUDGETS)) ev.push({ type: 'SET_BUDGET', id: pid, value: rupees(r) });
+  return run(s, ev);
+}
+
+function pactOpen() {
+  const s = aligning();
+  return run(s, [
+    { type: 'CHOOSE_DATES', option: s.dates.options[0].id },
+    { type: 'OPEN_PACT', need: 6, deadline: DEADLINE, rule: 'keep' },
+    { type: 'SET_CLOCK', clock: addHoursISO(T0, 5) },
+    { type: 'RESPOND', id: 'p3', answer: 'in' },
+    { type: 'RESPOND', id: 'p4', answer: 'in' },
+    { type: 'RESPOND', id: 'p5', answer: 'out' },
+    { type: 'SET_CLOCK', clock: addHoursISO(T0, 26) },
+    { type: 'RESPOND', id: 'p6', answer: 'in' }
+  ]);
+}
+
+function booked() {
+  let s = pactOpen();
+  s = run(s, [
+    { type: 'RESPOND', id: 'p2', answer: 'in' },
+    { type: 'RESPOND', id: 'p8', answer: 'in' },
+    { type: 'SET_CLOCK', clock: addHoursISO(T0, 30) },
+    { type: 'CONFIRM_BOOKING', provider: 'Villa host (direct)', reference: 'HMX4K2T9Q', amountPaid: rupees(12000), paidBy: 'p1', cancelBy: '2026-10-30' },
+    { type: 'RECORD_PAYMENT', from: 'p3', to: 'p1', amount: rupees(2000), ref: 'UPI 4471' },
+    { type: 'RECORD_PAYMENT', from: 'p6', to: 'p1', amount: rupees(2000), ref: '' },
+    { type: 'ADD_ITEM', day: 1, start: '07:00', end: '13:00', title: 'Bus Bengaluru → Madikeri', place: 'Madikeri KSRTC bus stand', costPP: 0 },
+    { type: 'ADD_ITEM', day: 1, start: '16:30', end: '18:30', title: 'Raja’s Seat at sunset', place: 'Raja’s Seat, Madikeri', costPP: 0 },
+    { type: 'ADD_ITEM', day: 2, start: '08:00', end: '12:00', title: 'Coffee estate walk', place: 'Coffee plantation tour, Coorg', costPP: rupees(600) },
+    { type: 'ADD_ITEM', day: 2, start: '14:00', end: '17:00', title: 'Abbey Falls', place: 'Abbey Falls, Madikeri', costPP: rupees(50) },
+    { type: 'ADD_ITEM', day: 3, start: '09:00', end: '15:00', title: 'Dubare elephant camp + rafting', place: 'Dubare Elephant Camp', costPP: rupees(1200) }
+  ]);
+  return s;
+}
+
+function onTrip() {
+  let s = booked();
+  s = run(s, [
+    { type: 'RECORD_PAYMENT', from: 'p4', to: 'p1', amount: rupees(2000), ref: '' },
+    { type: 'SET_CLOCK', clock: '2026-11-14T09:00:00+05:30' },
+    { type: 'START_TRIP' },
+    { type: 'ADD_EXPENSE', label: 'Villa balance at check-in', amount: rupees(24000), paidBy: 'p3', among: committed(s).map(p => p.id), source: 'stay-balance' },
+    { type: 'ADD_EXPENSE', label: 'Dinner at Coorg Cuisine', amount: rupees(4200), paidBy: 'p6', among: ['p1', 'p2', 'p3', 'p4', 'p6', 'p8'] },
+    { type: 'LOG_ITEM_EXPENSE', id: s.items.find(i => i.title === 'Coffee estate walk').id, paidBy: 'p8', among: ['p1', 'p2', 'p3', 'p6', 'p8'] }
+  ]);
+  return s;
+}
+
+function settling() {
+  let s = onTrip();
+  s = run(s, [
+    { type: 'SET_CLOCK', clock: '2026-11-16T20:00:00+05:30' },
+    { type: 'END_TRIP' }
+  ]);
+  return s;
+}
+
+const PRESETS = {
+  draft: { label: 'Fresh idea', note: 'Organiser has the group and three date options', build: draft },
+  aligning: { label: 'Dates & budgets', note: 'Friends marked dates and private budgets', build: aligning },
+  pact: { label: 'Pact open', note: '4 of 6 committed, deadline Wed 6 pm', build: pactOpen },
+  booked: { label: 'Booked', note: 'Villa booked, shares coming in, plan sketched', build: booked },
+  trip: { label: 'On the trip', note: 'Day 2 in Coorg with costs logged', build: onTrip },
+  settle: { label: 'Settling up', note: 'Back home, balances open', build: settling }
+};
+const DEFAULT_PRESET = 'pact';
+
+// Scripted replies for the "next friend replies" demo control.
+function nextScriptedReply(s) {
+  const order = [['p2', 'in'], ['p8', 'in'], ['p7', 'out'], ['p5', 'in']];
+  for (const [id, answer] of order) {
+    const p = s.people.find(x => x.id === id);
+    if (p && p.status === 'invited') return { type: 'RESPOND', id, answer };
+  }
+  return null;
+}
+
+return { dispatch, FRIENDS, DEADLINE, PRESETS, DEFAULT_PRESET, nextScriptedReply };
+})();
+
+// Pakka UI. One store (S), every change goes through M.dispatch, every view reads selectors.
+const { PRESETS, DEFAULT_PRESET, nextScriptedReply } = P;
+
+const KEY = 'pakka.v2';
+const TABS = [['home', 'Home'], ['align', 'Align'], ['commit', 'Commit'], ['book', 'Book'], ['plan', 'Plan'], ['money', 'Money']];
+const TAB_ICON = { home: '🏝️', align: '🗓️', commit: '🤝', book: '🏡', plan: '🗺️', money: '💸' };
+const ICON = {
+  ADD_PERSON: '🙋', INVITE: '💌', SET_AVAIL: '🗓️', ADD_DATE_OPTION: '🗓️', SET_BUDGET: '🔒', CHOOSE_DATES: '📌', SET_COSTS: '🧾', SET_TRIP: '✏️',
+  OPEN_PACT: '🤝', REVISE_PACT: '🔁', WITHDRAW: '🚪', REPLACE: '🔄', NUDGE: '🔔', CONFIRM_BOOKING: '🏡', RECHECK_BOOKING: '✅',
+  ADD_ITEM: '📍', REMOVE_ITEM: '🗑️', LOG_ITEM_EXPENSE: '💸', ADD_EXPENSE: '💸', REMOVE_EXPENSE: '🗑️', RECORD_PAYMENT: '💰',
+  START_TRIP: '🚐', END_TRIP: '🌅', CALL_OFF: '🛑', CANCEL: '🛑', CLOSE: '🏁', SET_ALBUM: '📸', RATE: '⭐', PLAN_AGAIN: '🔁'
+};
+const PATH = ['draft', 'aligning', 'committing', 'ready_to_book', 'booked', 'on_trip', 'settling', 'closed'];
+
+const STORY = {
+  draft: 'Organiser adds the group, date options and rough costs',
+  aligning: 'Friends mark dates and a private budget',
+  pact: 'A conditional yes: nobody pays unless enough commit',
+  booked: 'The line is hit, the stay is booked, shares go out',
+  trip: 'Day plan and costs logged as you go',
+  settle: 'Fewest transfers to square everyone up'
+};
+
+let S, ui = { tab: 'home', preset: DEFAULT_PRESET, last: null, sheet: null, logItem: null, pact: null };
+
+// ---------- helpers ----------
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ini = n => esc(String(n).split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase());
+const hue = n => [...String(n)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
+const av = (n, cls = '') => `<span class="av ${cls}" style="--h:${hue(n)}" aria-hidden="true">${ini(n)}</span>`;
+const who = id => esc(M.person(S, id)?.name || 'Someone');
+const me = () => M.person(S, S.viewer);
+const isOrg = () => !!me()?.organiser;
+const parseRs = v => { const n = parseInt(String(v ?? '').replace(/[^\d]/g, ''), 10); return Number.isFinite(n) ? M.rupees(n) : NaN; };
+const rs = p => Math.round(p / 100);
+const idx = p => PATH.indexOf(p === 'failed' ? 'committing' : p);
+const atLeast = p => S.phase !== 'cancelled' && idx(S.phase) >= idx(p);
+const going = () => M.committed(S);
+const phaseTone = { committing: 'mid', ready_to_book: 'go', booked: 'go', on_trip: 'go', failed: 'no', cancelled: 'no', settling: 'mid' };
+const ext = (href, label) => `<a class="ext" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+
+function save() { try { localStorage.setItem(KEY, JSON.stringify({ s: S, tab: ui.tab, preset: ui.preset })); } catch (e) { /* storage unavailable: demo still works */ } }
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY); if (!raw) return null;
+    const d = JSON.parse(raw);
+    if (!d || !d.s || d.s.schema !== M.SCHEMA || M.checkInvariants(d.s).length) return { bad: true };
+    return d;
+  } catch (e) { return { bad: true }; }
+}
+
+let toastTimer;
+function toast(msg, err = false) {
+  const t = document.getElementById('toast'); if (!t) return;
+  t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
+  t.setAttribute('role', err ? 'alert' : 'status');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.className = 'toast'; }, err ? 4200 : 2600);
+}
+
+function act(ev, okMsg) {
+  const r = M.dispatch(S, ev);
+  if (r.error) { toast(r.error, true); console.warn('[pakka] rejected', ev.type, r.error); return false; }
+  const v = M.checkInvariants(r.state);
+  if (v.length) { console.error('[pakka] invariant violation', v, ev); toast('That change would leave the trip inconsistent, so it wasn’t applied.', true); return false; }
+  S = r.state;
+  if (ev.type !== 'SET_VIEWER') ui.last = { summary: S.log[0]?.summary, effects: r.effects };
+  console.info('[pakka]', ev.type, r.effects);
+  save(); render();
+  if (okMsg) toast(okMsg);
+  return true;
+}
+
+function loadPreset(key) {
+  S = PRESETS[key].build(); ui = { ...ui, tab: 'home', preset: key, last: null, sheet: null, logItem: null, pact: null };
+  save(); render(); toast(`Loaded "${PRESETS[key].label}"`);
+}
+
+// ---------- tab state ----------
+function tabInfo(id) {
+  const p = S.phase, v = M.viability(S);
+  const lockWhy = (() => {
+    if (p === 'cancelled') return 'This plan was called off.';
+    if (p === 'failed') return 'The pact missed its line. Revise it on Commit or call it off.';
+    if (p === 'committing') return `Unlocks when ${v.need} commit. ${v.short} to go.`;
+    return 'Unlocks once the pact reaches its line.';
+  })();
+  switch (id) {
+    case 'home': return { st: 'open' };
+    case 'align': return { st: ['draft', 'aligning'].includes(p) ? 'now' : 'done' };
+    case 'commit': return p === 'draft' ? { st: 'lock', why: 'Opens after the invite goes out and dates are picked.' } : { st: ['committing', 'failed'].includes(p) || (p === 'aligning' && isOrg()) ? 'now' : atLeast('ready_to_book') ? 'done' : 'open' };
+    case 'book': return !atLeast('ready_to_book') ? { st: 'lock', why: lockWhy } : { st: p === 'ready_to_book' || S.booking?.status === 'needs_recheck' ? 'now' : 'done' };
+    case 'plan': return !atLeast('ready_to_book') ? { st: 'lock', why: lockWhy } : { st: p === 'on_trip' ? 'now' : atLeast('settling') ? 'done' : 'open' };
+    case 'money': return !atLeast('booked') ? { st: 'lock', why: p === 'cancelled' ? 'This plan was called off before any money moved.' : 'Opens when the booking is recorded. Until then nobody owes anything.' } : { st: p === 'settling' ? 'now' : p === 'closed' ? 'done' : 'open' };
+  }
+}
+
+// ---------- render ----------
+function render() { renderFrame(); renderRail(); }
+
+function renderFrame() {
+  const frame = document.getElementById('frame'); if (!frame) return;
+  const view = document.getElementById('view'); const prevScroll = view && view.dataset.tab === ui.tab ? view.scrollTop : 0;
+  const people = S.people.filter(p => p.status !== 'replaced');
+  const v0 = me();
+  frame.innerHTML = `
+    <header class="status">
+      <span class="clock">${esc(M.fmtWhen(S.clock))}</span>
+      <label class="who">${av(v0?.name || '', 'sm')}<span class="vh">Viewing as</span>
+        <select id="viewer" data-change="viewer">
+          ${people.map(p => `<option value="${p.id}" ${p.id === S.viewer ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}
+        </select></label>
+    </header>
+    <div class="title"><b>${esc(S.trip.name)}</b><span class="phase ${phaseTone[S.phase] || ''}">${esc(M.PHASE_LABEL[S.phase])}</span></div>
+    <main class="view" id="view" data-tab="${ui.tab}">${viewFor(ui.tab)}</main>
+    <nav class="tabs" aria-label="Trip stages">
+      ${TABS.map(([id, label]) => { const t = tabInfo(id); return `<button class="tab ${t.st === 'lock' ? 'locked' : ''}" data-act="tab" data-tab="${id}" ${ui.tab === id ? 'aria-current="page"' : ''}><span class="ti" aria-hidden="true">${TAB_ICON[id]}<span class="st ${t.st === 'lock' ? 'off' : t.st}"></span></span>${label}${t.st === 'lock' ? '<span class="vh"> (locked)</span>' : ''}</button>`; }).join('')}
+    </nav>
+    ${ui.sheet ? sheetHTML() : ''}`;
+  const v2 = document.getElementById('view'); if (v2) v2.scrollTop = prevScroll;
+  if (ui.sheet) document.getElementById('sheet-ok')?.focus();
+}
+
+function viewFor(tab) {
+  const t = tabInfo(tab);
+  if (t.st === 'lock') return `<div class="lock"><span class="ic">Locked</span><h2>${esc(TABS.find(x => x[0] === tab)[1])} isn’t open yet</h2><p class="sub">${esc(t.why)}</p><button class="btn ghost sm" data-act="tab" data-tab="${S.phase === 'failed' || S.phase === 'committing' ? 'commit' : 'home'}">Go to ${S.phase === 'failed' || S.phase === 'committing' ? 'Commit' : 'Home'}</button></div>`;
+  return ({ home: vHome, align: vAlign, commit: vCommit, book: vBook, plan: vPlan, money: vMoney })[tab]();
+}
+
+// ---------- HOME ----------
+function vHome() {
+  const r = M.tripRange(S), f = M.forecast(S), fit = M.budgetFit(S), acts = M.nextActions(S), m = me();
+  const warn = [];
+  const buf = M.deadlineBuffer(S);
+  if (buf && buf.risky && ['committing', 'aligning'].includes(S.phase)) warn.push(`<div class="banner warn"><b>Deadline is close to check-in</b><span class="sub">The pact closes ${buf.days} days before the trip. Villas usually refund in full only 14+ days out, and collecting shares takes a few days, so a late dropout gets expensive.</span></div>`);
+  if (S.booking?.status === 'needs_recheck') warn.push(`<div class="banner warn"><b>Booking needs re-confirming</b><span class="sub">${esc(S.booking.note)}</span></div>`);
+  if (S.phase === 'booked' && S.booking) { const d = M.daysUntil(S, S.booking.cancelBy); if (d >= 0 && d <= 3) warn.push(`<div class="banner warn"><b>Free cancellation ends ${esc(M.fmtDay(S.booking.cancelBy))}</b><span class="sub">After that, dropping out costs the group by the agreed rule.</span></div>`); }
+  const v = M.viability(S);
+  if (S.phase === 'committing' && v && !v.reachable) warn.push(`<div class="banner no"><b>Can’t reach ${v.need} any more</b><span class="sub">Only ${v.committed + v.pending} people could still say yes.</span></div>`);
+  if (S.phase === 'cancelled') warn.push(`<div class="banner no"><b class="big">Called off</b><span class="sub">No money moved. You can start again with the same group.</span>${isOrg() ? '<button class="btn sm" data-act="plan-again">Start a new plan with this group</button>' : ''}</div>`);
+
+  const each = atLeast('booked') ? M.costPerPerson(S, f.going) : f.atNeed;
+  const fitLine = m.organiser
+    ? `Fits ${fit.fits} of ${fit.shared} shared budgets${fit.shared < fit.of ? ` · ${fit.of - fit.shared} not shared yet` : ''}`
+    : m.budgetMax == null ? 'Your private budget isn’t set' : m.budgetMax >= fit.target ? 'Fits your private budget' : 'Over your private budget';
+  const hero = ['committing', 'failed'].includes(S.phase) && v ? `
+    <div class="meter">
+      <div class="count">${v.committed}<small> committed · need ${v.need}</small></div>
+      <div class="track" aria-hidden="true"><div class="fill" style="width:${Math.min(100, v.committed / Math.max(1, M.active(S).length) * 100)}%"></div><div class="mark" style="left:${Math.min(100, v.need / Math.max(1, M.active(S).length) * 100)}%"><span>${v.need} needed</span></div></div>
+      <div class="timer"><span>${S.phase === 'failed' ? 'Closed below the line' : v.reachable ? `${v.short} more to go` : `Can’t reach ${v.need} now`}</span><span>Closes <b>${esc(M.fmtWhen(S.pact.deadline))}</b></span></div>
+    </div>` : '';
+  const [place, ...region] = S.trip.destination.split(/,\s*/);
+  return `
+    <div class="pass">
+      <div class="pass-main">
+        <span class="lbl">Squad trip · organised by ${who(M.organiser(S).id)}</span>
+        <div class="pass-dest">${esc(place)}${region.length ? `<small>${esc(region.join(', '))}</small>` : ''}</div>
+        <h2 class="pass-route">${r ? `<span>${esc(M.fmtDay(r.start))}</span><i aria-hidden="true">✈</i><span class="vh"> to </span><span>${esc(M.fmtDay(r.end))}</span>` : 'Dates not chosen yet'}</h2>
+      </div>
+      <div class="pass-stub">${r ? `<span><b>${r.nights}</b> nights</span><span><b>${going().length}</b> going</span>${S.pact ? `<span><b>${S.pact.need}</b> needed</span>` : ''}` : '<span>Pick dates on Align</span>'}</div>
+    </div>
+    ${warn.join('')}
+    ${hero}
+    <div class="calc">${atLeast('booked') ? 'Each person, all-in' : `Each person if ${f.need} go`}: <b class="money">${M.fmt(each)}</b><span class="sub">${esc(fitLine)}</span></div>
+    ${acts.length ? `<div class="sec"><span class="lbl">Next for you</span><ul class="next">${acts.map(a => `<li><button data-act="tab" data-tab="${a.tab}">${esc(a.text)}</button></li>`).join('')}</ul></div>` : ''}
+    <div class="sec"><span class="lbl">Recent activity</span>${activityHTML()}</div>`;
+}
+
+// Recent activity: one line per thing that happened. Clock jumps are hidden and runs of the
+// same kind of event (e.g. eight people marking dates) fold into one line with a count.
+const ago = iso => { const m = Math.round((Date.parse(S.clock) - Date.parse(iso)) / 60000); return m < 1 ? 'now' : m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m / 60)}h ago` : `${Math.floor(m / 1440)}d ago`; };
+function activityHTML(n = 5) {
+  const rows = [];
+  for (const l of S.log) {
+    if (l.type === 'SET_CLOCK') continue;
+    const prev = rows[rows.length - 1];
+    if (prev && prev.type === l.type && l.type !== 'RESPOND') { prev.more++; continue; }
+    if (rows.length === n) break;
+    rows.push({ ...l, more: 0 });
+  }
+  if (!rows.length) return '<p class="sub">Nothing yet. Quiet before the trip 🌊</p>';
+  const GROUP = { SET_AVAIL: 'date replies', SET_BUDGET: 'private budgets set', ADD_PERSON: 'friends added to the group', ADD_DATE_OPTION: 'date options added', ADD_ITEM: 'things added to the plan', REMOVE_ITEM: 'plan items removed', ADD_EXPENSE: 'expenses added', LOG_ITEM_EXPENSE: 'plan costs logged', RECORD_PAYMENT: 'payments marked', RATE: 'trip ratings' };
+  const text = l => l.more && GROUP[l.type] ? `${l.more + 1} ${GROUP[l.type]}` : `${esc(l.summary)}${l.more ? ` <span class="more">+${l.more}<span class="vh"> more like this</span></span>` : ''}`;
+  const icon = l => l.type === 'RESPOND' ? (/committed$/.test(l.summary) ? '✅' : '👋') : ICON[l.type] || '✨';
+  return `<ul class="feed">${rows.map(l => `<li><span class="fi" aria-hidden="true">${icon(l)}</span><span class="ft">${text(l)}</span><time datetime="${esc(l.at)}" title="${esc(M.fmtWhen(l.at))}">${ago(l.at)}</time></li>`).join('')}</ul>`;
+}
+
+// ---------- ALIGN ----------
+function vAlign() {
+  const org = isOrg(), p = S.phase;
+  if (p === 'draft') {
+    if (!org) return `<div class="lock"><h2>${who(M.organiser(S).id)} is still setting this up</h2><p class="sub">You’ll get a link in the group when it’s ready.</p></div>`;
+    const block = M.blockedReason(S, 'INVITE');
+    return `
+      <div class="sec"><h4>Step 1 · The trip</h4>
+        <form class="card" data-form="trip">
+          <div class="grid2"><label class="f">Trip name<input type="text" id="f-trip-name" name="name" value="${esc(S.trip.name)}" maxlength="60"></label>
+          <label class="f">Destination<input type="text" id="f-trip-dest" name="destination" value="${esc(S.trip.destination)}" maxlength="60"></label></div>
+          <button class="btn ghost sm">Save trip details</button>
+        </form></div>
+      <div class="sec"><h4>Step 2 · Who's invited (${S.people.length})</h4>
+        <div class="card"><ul class="list">${S.people.map(x => `<li>${av(x.name)}<span class="grow">${esc(x.name)}</span>${x.organiser ? '<span class="pill">organiser</span>' : ''}</li>`).join('')}</ul>
+        <form class="row" data-form="person"><input type="text" id="f-person" name="name" placeholder="Friend’s name" maxlength="24" aria-label="Friend’s name" style="flex:1"><button class="btn sm">Add</button></form></div></div>
+      <div class="sec"><h4>Step 3 · Date options</h4>
+        <div class="card">${S.dates.options.map(o => `<div class="row between"><span>${esc(M.fmtDay(o.start))} → ${esc(M.fmtDay(M.addDays(o.start, o.nights)))}</span><span class="sub">${o.nights} nights</span></div>`).join('') || '<p class="sub">Add one or two weekends so friends can say which works.</p>'}
+        <form class="grid2" data-form="date"><label class="f">Starts<input type="date" id="f-date" name="start" min="${M.ymdInIST(S.clock)}"></label>
+          <label class="f">Nights<select class="in" id="f-nights" name="nights">${[1, 2, 3, 4, 5].map(n => `<option ${n === 2 ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+          <button class="btn ghost sm" style="grid-column:1/-1">Add date option</button></form></div></div>
+      <div class="sec"><h4>Step 4 · Rough costs</h4>${costsForm()}</div>
+      <div class="sec">
+        ${block ? `<p class="sub">${esc(block)}</p>` : ''}
+        <button class="btn wide" data-act="invite" ${block ? 'disabled' : ''}>Share the invite</button>
+        <p class="sub">Friends mark the dates they can make and a private budget. Nobody commits yet.</p>
+      </div>`;
+  }
+  const tally = M.dateTally(S), act_ = M.active(S).length, m = me(), fit = M.budgetFit(S);
+  const canMark = p === 'aligning';
+  return `
+    <div class="sec"><h4>Dates</h4>
+      ${tally.map(o => `<div class="card">
+        <div class="row between"><b>${esc(M.fmtDay(o.start))} → ${esc(M.fmtDay(M.addDays(o.start, o.nights)))}</b>${o.id === S.dates.chosenId ? '<span class="pill ok">Chosen</span>' : `<span class="sub">${o.nights} nights</span>`}</div>
+        <div class="row between"><span class="sub">${o.yes.length} of ${act_} can make it</span><span class="sub">${o.no.length} can’t</span></div>
+        <div class="bar" aria-hidden="true"><i style="width:${Math.round(o.yes.length / act_ * 100)}%"></i></div>
+        ${canMark ? `<div class="row"><span class="sub">You:</span>
+          <button class="chip" data-act="avail" data-opt="${o.id}" data-v="1" aria-pressed="${m.avail[o.id] === true}">I can</button>
+          <button class="chip" data-act="avail" data-opt="${o.id}" data-v="0" aria-pressed="${m.avail[o.id] === false}">I can’t</button>
+          ${isOrg() && o.id !== S.dates.chosenId ? `<button class="btn sm" data-act="choose" data-opt="${o.id}" style="margin-left:auto">Choose</button>` : ''}</div>` : ''}
+      </div>`).join('')}
+    </div>
+    ${['aligning', 'committing', 'failed', 'ready_to_book'].includes(p) && !['withdrawn', 'replaced'].includes(m.status) ? `
+    <div class="sec"><h4>Your private budget</h4>
+      <form class="card" data-form="budget">
+        <p class="sub">The most you’d spend on this trip, all-in. Only you see the number. The group only sees how many budgets the plan fits.</p>
+        <div class="row"><label class="f" style="flex:1">Max ₹<input type="text" id="f-budget" name="budget" inputmode="numeric" value="${m.budgetMax == null ? '' : rs(m.budgetMax)}" placeholder="e.g. 12000"></label>
+        <button class="btn sm" style="align-self:flex-end">Save</button>${m.budgetMax != null ? '<button type="button" class="btn ghost sm" data-act="clear-budget" style="align-self:flex-end">Clear</button>' : ''}</div>
+        ${m.budgetMax != null ? `<span class="pill ${m.budgetMax >= fit.target ? 'ok' : 'bad'}" style="align-self:flex-start">${m.budgetMax >= fit.target ? 'The plan fits your budget' : `The plan is ${M.fmt(fit.target - m.budgetMax)} over your budget`}</span>` : ''}
+      </form></div>` : ''}
+    <div class="sec"><h4>Group fit</h4>
+      <div class="banner info"><span>Forecast at ${S.pact?.need || Math.min(6, act_)} people: <b class="money">${M.fmt(fit.target)}</b> each, all-in.</span>
+      <span class="sub">Fits ${fit.fits} of ${fit.shared} budgets shared${fit.shared < fit.of ? `; ${fit.of - fit.shared} not shared yet` : ''}.</span></div>
+    </div>
+    ${isOrg() && M.eventAllowed(S, 'SET_COSTS') && !S.booking ? `<div class="sec"><h4>Costs</h4>${costsForm()}</div>` : ''}
+    ${isOrg() && p === 'aligning' ? `<div class="sec"><h4>Invite</h4><div class="row">${ext(I.waShare(I.inviteMessage(S)), 'Share in WhatsApp')}<button class="btn ghost sm" data-act="copy" data-text="${esc(I.inviteMessage(S))}">Copy message</button></div></div>` : ''}`;
+}
+
+function costsForm() {
+  const c = S.costs, r = M.tripRange(S), n = S.pact?.need || Math.min(6, M.active(S).length);
+  return `<form class="card" data-form="costs">
+    <div class="grid2">
+      <label class="f">Stay total ₹<input type="text" id="f-stay" name="stayTotal" inputmode="numeric" value="${rs(c.stayTotal)}"></label>
+      <label class="f">Advance to book ₹<input type="text" id="f-adv" name="advance" inputmode="numeric" value="${rs(c.advance)}"></label>
+      <label class="f">Travel per person ₹<input type="text" id="f-travel" name="transportPP" inputmode="numeric" value="${rs(c.transportPP)}"></label>
+      <label class="f">Food & local per day ₹<input type="text" id="f-food" name="foodPPPerDay" inputmode="numeric" value="${rs(c.foodPPPerDay)}"></label>
+    </div>
+    <p class="sub">At ${n} people: <b class="money">${M.fmt(M.costPerPerson(S, n))}</b> each${r ? ` for ${r.days} days` : ''}. Estimates, not quotes.</p>
+    <button class="btn ghost sm">Update costs</button></form>`;
+}
+
+// ---------- COMMIT ----------
+function vCommit() {
+  const p = S.phase, org = isOrg(), m = me();
+  if (p === 'aligning') {
+    if (!org) return `<div class="lock"><h2>The pact isn’t open yet</h2><p class="sub">${who(M.organiser(S).id)} will open it once the dates are settled. Meanwhile, mark your dates and budget on Align.</p><button class="btn ghost sm" data-act="tab" data-tab="align">Go to Align</button></div>`;
+    return pactSetup();
+  }
+  const v = M.viability(S), act_ = M.active(S).length || 1, c = v.committed;
+  const deadlineMs = Date.parse(S.pact.deadline) - Date.parse(S.clock);
+  const left = deadlineMs > 0 ? (deadlineMs >= 86400000 ? `${Math.floor(deadlineMs / 86400000)}d ${Math.floor(deadlineMs % 86400000 / 3600000)}h left` : `${Math.max(1, Math.floor(deadlineMs / 3600000))}h left`) : 'closed';
+  const lo = M.costPerPerson(S, act_), hi = M.costPerPerson(S, S.pact.need);
+  const people = S.people.filter(x => x.status !== 'replaced' || x.replacedBy);
+  const pill = x => x.status === 'in' ? '<span class="pill in">Committed</span>' : x.status === 'out' ? '<span class="pill out">Out</span>' : x.status === 'withdrawn' ? '<span class="pill out">Pulled out</span>' : x.status === 'replaced' ? `<span class="pill">Spot taken by ${who(x.replacedBy)}</span>` : '<span class="pill">Not yet</span>';
+  let top = '';
+  if (p === 'ready_to_book') top = `<div class="banner go"><b class="big">It’s pakka.</b><span class="sub">${c} committed before the deadline. The group agreed to this line, so booking now is the group’s call, not one person’s gamble.</span>${org ? '<button class="btn go sm" data-act="tab" data-tab="book" style="align-self:flex-start">Book the stay</button>' : ''}</div>`;
+  if (p === 'failed') top = `<div class="banner no"><b class="big">Not this time.</b><span class="sub">${c} of ${v.need} by ${esc(M.fmtWhen(S.pact.deadline))}. The pact closed and nobody owes anything.</span></div>`;
+  const mine = (() => {
+    if (!['committing', 'ready_to_book'].includes(p) || m.organiser) return '';
+    if (m.status === 'invited') return `<div class="card pact">
+        <b style="font-family:var(--display);font-size:19px;line-height:1.2">Happens only if ${v.need} commit by ${esc(M.fmtWhen(S.pact.deadline))}.</b>
+        <div class="row between"><span class="sub">Your share</span><b class="money">${M.fmt(lo)}–${M.fmt(hi)}</b></div>
+        <div class="row between"><span class="sub">When you pay</span><span>Only once ${v.need} have committed</span></div>
+        <span class="sub">${esc(M.RULES[S.pact.rule])}</span>
+        <p class="sub">There’s no “maybe”. If it doesn’t reach ${v.need}, your yes costs nothing.</p>
+        <div class="grid2"><button class="btn go" data-act="respond" data-a="in">I’m committing</button><button class="btn ghost" data-act="respond" data-a="out">Can’t make it</button></div></div>`;
+    if (m.status === 'out') return `<div class="card"><span class="sub">You said you can’t make it.</span><button class="btn ghost sm" data-act="respond" data-a="in" style="align-self:flex-start">Actually, I’m in</button></div>`;
+    return '';
+  })();
+  const withdraw = !m.organiser && m.status === 'in' && M.eventAllowed(S, 'WITHDRAW') ? `<button class="btn warn sm" data-act="withdraw" style="align-self:flex-start">I can’t come any more</button>` : '';
+  const orgTools = org && p === 'committing' ? `<div class="sec"><h4>Organiser</h4><div class="row">
+      ${v.pending ? `<button class="btn ghost sm" data-act="nudge">Let Pakka remind the ${v.pending}</button>` : ''}
+      ${ext(I.waShare(I.inviteMessage(S)), 'Share in WhatsApp')}</div>
+      ${M.pending(S).length ? `<div class="row"><span class="sub">See it as:</span>${M.pending(S).slice(0, 4).map(x => `<button class="chip" data-act="viewas" data-id="${x.id}">${esc(x.name)}</button>`).join('')}</div>` : ''}</div>` : '';
+  const recovery = p === 'failed' && org ? `<div class="sec"><h4>What now</h4>
+      ${c >= 2 ? `<button class="btn" data-act="revise" data-need="${c}">Go with the ${c} who said yes</button>` : ''}
+      <button class="btn ghost" data-act="revise" data-need="${v.need}" data-more="1">Give everyone 2 more days</button>
+      <button class="btn warn" data-act="cancel">Call it off</button>
+      <p class="sub">Revising only asks people who haven’t said no.</p></div>` : '';
+  const replace = org && ['booked', 'on_trip'].includes(p) && S.people.some(x => x.status === 'withdrawn') ? `<div class="sec"><h4>Fill a spot</h4>${S.people.filter(x => x.status === 'withdrawn').map(x => `<form class="row" data-form="replace" data-id="${x.id}"><span class="sub" style="flex-basis:100%">${esc(x.name)} pulled out. Who takes the spot?</span><input type="text" id="f-replace-${x.id}" name="name" placeholder="Name" aria-label="Replacement for ${esc(x.name)}" style="flex:1"><button class="btn sm">Take the spot</button></form>`).join('')}</div>` : '';
+  return `
+    ${top}
+    <div class="meter">
+      <span class="sub">${esc(S.trip.name)}</span>
+      <div class="count">${c}<small> committed · need ${v.need}</small></div>
+      <div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="${act_}" aria-valuenow="${c}" aria-label="Commitments">
+        <div class="fill" style="width:${Math.min(100, c / act_ * 100)}%"></div>
+        <div class="mark" style="left:${Math.min(100, v.need / act_ * 100)}%"><span>${v.need} needed</span></div></div>
+      <div class="timer"><span>${p === 'committing' ? (v.reachable ? `${v.short} more to go` : `Can’t reach ${v.need} now`) : p === 'failed' ? 'Closed below the line' : 'Reached the line'}</span><span>${p === 'committing' ? `Closes <b>${esc(M.fmtWhen(S.pact.deadline))}</b> · ${left}` : `Deadline <b>${esc(M.fmtWhen(S.pact.deadline))}</b>`}</span></div>
+    </div>
+    ${mine}
+    <ul class="list">${people.map(x => `<li>${av(x.name)}<span class="grow">${esc(x.name)}${x.organiser ? ' <span class="sub">· organiser</span>' : ''}${x.id === S.viewer ? ' <span class="sub">· you</span>' : ''}</span>${pill(x)}</li>`).join('')}</ul>
+    ${withdraw}
+    ${orgTools}${recovery}${replace}`;
+}
+
+function pactSetup() {
+  const act_ = M.active(S).length;
+  const pc = ui.pact || (ui.pact = { need: Math.min(6, act_), day: 2, rule: 'keep' });
+  pc.need = Math.min(Math.max(2, pc.need), act_);
+  const today = M.ymdInIST(S.clock);
+  const days = [1, 2, 3, 4].map(d => ({ d, iso: M.isoAt(M.addDays(today, d), '18:00') }));
+  const deadline = days.find(x => x.d === pc.day).iso;
+  const buf = M.deadlineBuffer(S, deadline);
+  const noDates = !S.dates.chosenId;
+  return `
+    <div class="sec"><span class="sub">Open the pact</span><h2>When does this trip become real?</h2></div>
+    ${noDates ? `<div class="banner warn"><b>Choose the dates first</b><span class="sub">The pact needs fixed dates so everyone knows what they’re saying yes to.</span><button class="btn sm" data-act="tab" data-tab="align" style="align-self:flex-start">Pick dates on Align</button></div>` : ''}
+    <div class="sec"><h4>It’s on if at least</h4>
+      <div class="stepper"><button data-act="need" data-d="-1" aria-label="Fewer people">−</button><b>${pc.need} <small>of ${act_} commit</small></b><button data-act="need" data-d="1" aria-label="More people">+</button></div></div>
+    <div class="sec"><h4>Decide by</h4>
+      <div class="chips">${days.map(x => `<button class="chip" data-act="pact-day" data-d="${x.d}" aria-pressed="${x.d === pc.day}">${esc(M.fmtWhen(x.iso))}</button>`).join('')}</div>
+      ${buf ? `<span class="pill ${buf.risky ? 'warn' : 'ok'}" style="align-self:flex-start">${buf.days} days before check-in${buf.risky ? ` · under ${M.SAFE_BUFFER_DAYS}, dropouts get costly` : ''}</span>` : ''}</div>
+    <div class="sec"><h4>If someone drops out after booking</h4>
+      <div class="radios">${Object.entries(M.RULES).map(([k, t]) => `<label><input type="radio" name="rule" value="${k}" data-change="rule" ${k === pc.rule ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('')}</div></div>
+    <div class="banner info"><span>Each share: <b class="money">${M.fmt(M.costPerPerson(S, act_))}</b> if all ${act_} come, up to <b class="money">${M.fmt(M.costPerPerson(S, pc.need))}</b> at ${pc.need}.</span><span class="sub">Below ${pc.need}, the trip is off and nobody pays.</span></div>
+    <button class="btn wide" data-act="open-pact" ${noDates ? 'disabled' : ''}>Open the pact</button>`;
+}
+
+// ---------- BOOK ----------
+function vBook() {
+  const p = S.phase, org = isOrg(), r = M.tripRange(S);
+  if (p === 'ready_to_book') {
+    if (!org) return `<div class="banner go"><b class="big">It’s pakka.</b><span class="sub">Waiting for ${who(M.organiser(S).id)} to book. Nobody has paid anything yet, and you’ll see your exact share as soon as the booking is recorded.</span></div>`;
+    const links = I.staySearchLinks(S);
+    const cancelDefault = M.addDays(r.start, -14) > M.ymdInIST(S.clock) ? M.addDays(r.start, -14) : M.ymdInIST(S.clock);
+    return `
+      <div class="banner go"><b class="big">It’s pakka · ${going().length} going</b><span class="sub">${esc(M.fmtDay(r.start))} → ${esc(M.fmtDay(r.end))}, ${r.nights} nights in ${esc(S.trip.destination)}.</span></div>
+      <div class="sec"><h4>1 · Find and book the stay</h4>
+        <div class="card"><div class="row">${links.map(l => ext(l.href, `Search ${l.label}`)).join('')}</div>
+        <p class="sub">These open with your dates and ${going().length} guests. Pakka doesn’t book or pay for you.</p>
+        <p class="sub">Planned: stay ${M.fmt(S.costs.stayTotal)}, advance ${M.fmt(S.costs.advance)}. Some platforms take the full stay upfront, so record what you actually paid.</p></div></div>
+      <div class="sec"><h4>2 · Record the booking</h4>
+        <form class="card" data-form="booking">
+          <div class="grid2">
+            <label class="f">Booked on<input type="text" id="f-provider" name="provider" value="Villa host (direct)" maxlength="40"></label>
+            <label class="f">Booking reference<input type="text" id="f-ref" name="reference" placeholder="From the confirmation" maxlength="40"></label>
+            <label class="f">Paid now ₹<input type="text" id="f-paid" name="amountPaid" inputmode="numeric" value="${rs(S.costs.advance)}"></label>
+            <label class="f">Paid by<select class="in" id="f-paidby" name="paidBy">${going().map(x => `<option value="${x.id}" ${x.id === S.viewer ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>
+            <label class="f" style="grid-column:1/-1">Free cancellation until<input type="date" id="f-cancel" name="cancelBy" value="${cancelDefault}"></label>
+          </div>
+          <button class="btn go">Record booking</button>
+          <p class="sub">The trip is only marked booked once a reference is entered here.</p>
+        </form></div>`;
+  }
+  const b = S.booking;
+  if (!b) return `<div class="lock"><h2>No booking</h2><p class="sub">This trip ended before anything was booked.</p></div>`;
+  const cancelDays = M.daysUntil(S, b.cancelBy);
+  const others = S.dates.options.filter(o => o.id !== S.dates.chosenId);
+  const advance = S.expenses.find(e => e.source === 'advance');
+  const sh = advance ? M.expenseShares(advance) : {};
+  const bal = M.balances(S), owesOrg = M.settlements(S).filter(t => t.to === b.paidBy);
+  return `
+    ${b.status === 'needs_recheck' ? `<div class="banner warn"><b>Re-confirm with the host</b><span class="sub">${esc(b.note)}</span>
+      ${org ? `<form class="row" data-form="recheck"><input type="text" id="f-recheck" name="reference" value="${esc(b.reference)}" aria-label="Confirmed reference" style="flex:1"><button class="btn sm">Host confirmed</button></form>` : ''}</div>` : ''}
+    <div class="card">
+      <div class="row between"><b>${esc(b.provider)}</b><span class="pill ${b.status === 'confirmed' ? 'ok' : 'warn'}">${b.status === 'confirmed' ? 'Confirmed' : 'Needs re-check'}</span></div>
+      <div class="row between"><span class="sub">Reference</span><span class="money">${esc(b.reference)}</span></div>
+      <div class="row between"><span class="sub">Paid by ${who(b.paidBy)}</span><span class="money">${M.fmt(b.amountPaid)}</span></div>
+      <div class="row between"><span class="sub">Balance at check-in</span><span class="money">${M.fmt(Math.max(0, S.costs.stayTotal - b.amountPaid))}</span></div>
+      <div class="row between"><span class="sub">Free cancellation</span><span>${cancelDays >= 0 ? `until ${esc(M.fmtDay(b.cancelBy))} · ${cancelDays} days` : `ended ${esc(M.fmtDay(b.cancelBy))}`}</span></div>
+      <div class="row">${ext(I.tripCalendarLink(S), 'Add to Google Calendar')}${ext(I.mapsDirections(S.trip.destination), 'Directions')}</div>
+    </div>
+    ${p === 'booked' && advance ? `<div class="sec"><h4>Shares of the advance</h4>
+      <ul class="list">${advance.among.map(id => { const t = owesOrg.find(x => x.from === id); return `<li>${av(M.person(S, id).name)}<span class="grow">${who(id)}<br><span class="sub money">${M.fmt(sh[id])}</span></span>${id === b.paidBy ? '<span class="pill ok">Paid the host</span>' : t ? `<span class="pill warn">Owes ${M.fmt(t.amount)}</span>${(org && S.viewer === b.paidBy) ? `<button class="btn ghost sm" data-act="mark-paid" data-from="${id}" data-to="${b.paidBy}" data-amount="${t.amount}">Received</button>` : ''}` : bal[id] >= 0 ? '<span class="pill ok">Paid</span>' : '<span class="pill">Settles later</span>'}</li>`; }).join('')}</ul>
+      ${(() => { const t = owesOrg.find(x => x.from === S.viewer); return t ? `<div class="card"><span>Pay ${who(t.to)} <b class="money">${M.fmt(t.amount)}</b> in any UPI app, then tell the group here.</span><button class="btn go sm" data-act="i-paid" data-to="${t.to}" data-amount="${t.amount}" style="align-self:flex-start">I’ve paid</button></div>` : ''; })()}
+      <p class="sub">Everyone gets the same ask at the same moment, so nobody pays first and nobody chases. Pakka never moves money; payments are marked by the people involved.</p>
+      ${org && owesOrg.length ? `<div class="row">${ext(I.waShare(`Shares for the ${S.trip.name} advance: ${owesOrg.map(t => `${M.person(S, t.from).name} ${M.fmt(t.amount)}`).join(', ')}. Pay ${M.person(S, b.paidBy).name} on any UPI app and tap "I've paid" on Pakka.`), 'Send reminder in WhatsApp')}</div>` : ''}
+    </div>` : ''}
+    ${org && p === 'booked' ? `<div class="sec"><h4>Changes</h4>
+      ${others.length ? `<div class="card"><span class="sub">Move the trip to other dates. The booking is flagged until the host confirms, and plan items that no longer fit are flagged too.</span>
+      <div class="row">${others.map(o => `<button class="btn ghost sm" data-act="change-dates" data-opt="${o.id}">${esc(M.fmtDay(o.start))}, ${o.nights} nights</button>`).join('')}</div></div>` : ''}
+      <button class="btn warn sm" data-act="call-off" style="align-self:flex-start">Call the trip off</button></div>` : ''}`;
+}
+
+// ---------- PLAN ----------
+function vPlan() {
+  const r = M.tripRange(S), flags = M.itemFlags(S), today = M.tripDayToday(S), p = S.phase, org = isOrg();
+  const canEdit = M.eventAllowed(S, 'ADD_ITEM');
+  const days = [];
+  for (let d = 1; d <= r.days; d++) days.push(d);
+  const outside = S.items.filter(it => it.day > r.days);
+  const itemHTML = it => {
+    const f = flags[it.id] || []; const clash = f.filter(x => x.startsWith('clash')).map(x => S.items.find(y => y.id === x.slice(6))?.title).filter(Boolean);
+    const out = f.includes('outside');
+    return `<div class="item ${out ? 'outside' : clash.length ? 'clash' : ''}">
+      <time>${esc(it.start)}<br>${esc(it.end)}</time>
+      <div><b>${esc(it.title)}</b><div class="meta">${it.place ? ext(I.mapsSearch(it.place), 'Map') : ''}${it.costPP ? `<span class="money">${M.fmt(it.costPP)} pp</span>` : ''}${it.expenseId ? '<span class="pill ok">Logged</span>' : ''}</div></div>
+      <div>${canEdit && !it.expenseId && (org || true) ? `<button class="x" data-act="rm-item" data-id="${it.id}" aria-label="Remove ${esc(it.title)}">×</button>` : ''}</div>
+      ${out ? `<span class="why">Outside the trip dates now</span>` : clash.length ? `<span class="why">Overlaps “${esc(clash.join('”, “'))}”</span>` : ''}
+      ${p === 'on_trip' && it.costPP && !it.expenseId ? (ui.logItem === it.id ? logForm(it) : `<button class="btn ghost sm" data-act="log-item" data-id="${it.id}" style="grid-column:2/-1;justify-self:start">Log cost</button>`) : ''}
+    </div>`;
+  };
+  const startBlock = p === 'booked' ? M.blockedReason(S, 'START_TRIP') : null;
+  return `
+    <div class="sec"><span class="sub">${esc(S.trip.destination)}</span><h2>${esc(M.fmtDay(r.start))} → ${esc(M.fmtDay(r.end))}</h2>
+      <div class="row">${ext(I.tripCalendarLink(S), 'Add to Google Calendar')}</div></div>
+    ${p === 'ready_to_book' ? '<div class="banner info"><span class="sub">Sketch the days now. Costs per person you add here go into everyone’s forecast.</span></div>' : ''}
+    ${org && p === 'booked' ? `<div class="sec">${startBlock ? `<p class="sub">${esc(startBlock)}</p>` : ''}<button class="btn go" data-act="start-trip" ${startBlock ? 'disabled' : ''}>Start the trip</button></div>` : ''}
+    ${days.map(d => { const list = S.items.filter(it => it.day === d); return `<div class="day ${today === d ? 'today' : ''}"><h4>${esc(I.dayLabel(S, d))}${today === d ? ' · today' : ''}</h4>${list.map(itemHTML).join('') || '<p class="sub">Nothing planned.</p>'}</div>`; }).join('')}
+    ${outside.length ? `<div class="day"><h4>Outside the new dates</h4>${outside.map(itemHTML).join('')}</div>` : ''}
+    ${canEdit ? `<div class="sec"><h4>Add to the plan</h4>
+      <form class="card" data-form="item">
+        <div class="grid2">
+          <label class="f">Day<select class="in" id="f-day" name="day">${days.map(d => `<option value="${d}" ${d === (today || 1) ? 'selected' : ''}>${esc(I.dayLabel(S, d))}</option>`).join('')}</select></label>
+          <label class="f">Cost per person ₹<input type="text" id="f-itemcost" name="costPP" inputmode="numeric" placeholder="0"></label>
+          <label class="f">Starts<input type="time" id="f-start" name="start" value="10:00"></label>
+          <label class="f">Ends<input type="time" id="f-end" name="end" value="12:00"></label>
+          <label class="f" style="grid-column:1/-1">What<input type="text" id="f-title" name="title" maxlength="60" placeholder="e.g. Coffee estate walk"></label>
+          <label class="f" style="grid-column:1/-1">Where (for the map)<input type="text" id="f-place" name="place" maxlength="80" placeholder="Place name or address"></label>
+        </div>
+        <button class="btn ghost sm">Add</button></form></div>` : ''}
+    ${org && p === 'on_trip' ? '<button class="btn" data-act="end-trip">End the trip and settle up</button>' : ''}`;
+}
+function logForm(it) {
+  const g = going();
+  return `<form class="inline" data-form="logitem" data-id="${it.id}">
+    <label class="f">Who paid<select class="in" id="f-logpaid-${it.id}" name="paidBy">${g.map(x => `<option value="${x.id}" ${x.id === S.viewer ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>
+    <span class="sub">Who went (${M.fmt(it.costPP)} each)</span>
+    <div class="checks">${g.map(x => `<label><input type="checkbox" name="among" value="${x.id}" checked>${esc(x.name)}</label>`).join('')}</div>
+    <div class="row"><button class="btn sm">Log it</button><button type="button" class="btn ghost sm" data-act="log-item" data-id="">Cancel</button></div></form>`;
+}
+
+// ---------- MONEY ----------
+function vMoney() {
+  const p = S.phase, org = isOrg(), bal = M.balances(S), st = M.settlements(S), mine = bal[S.viewer] || 0;
+  const g = going(), spent = M.spentPerPerson(S), planned = M.costPerPerson(S, Math.max(g.length, 1));
+  const myOwe = st.filter(t => t.from === S.viewer);
+  const stayLogged = S.expenses.some(e => e.source === 'stay-balance');
+  const stayBal = S.booking ? S.costs.stayTotal - S.booking.amountPaid : 0;
+  const pulse = Object.values(S.pulse);
+  return `
+    <div class="banner ${mine < 0 ? 'warn' : mine > 0 ? 'info' : 'go'}">
+      <b>${mine < 0 ? `You owe ${M.fmt(-mine)}` : mine > 0 ? `You’re owed ${M.fmt(mine)}` : 'You’re all square'}</b>
+      ${myOwe.map(t => `<div class="row between"><span>Pay ${who(t.to)} <span class="money">${M.fmt(t.amount)}</span></span><button class="btn go sm" data-act="i-paid" data-to="${t.to}" data-amount="${t.amount}">I’ve paid</button></div>`).join('')}
+    </div>
+    <div class="sec"><h4>Settle up · ${st.length} transfer${st.length === 1 ? '' : 's'}</h4>
+      ${st.length ? `<ul class="list">${st.map(t => `<li><span class="grow">${who(t.from)} → ${who(t.to)}</span><span class="money">${M.fmt(t.amount)}</span>${(org || S.viewer === t.to) && S.viewer !== t.from ? `<button class="btn ghost sm" data-act="mark-paid" data-from="${t.from}" data-to="${t.to}" data-amount="${t.amount}">Received</button>` : ''}</li>`).join('')}</ul>
+      <p class="sub">Fewest transfers that settle everyone. Pay in any UPI app; Pakka records it only when someone marks it.</p>` : '<p class="sub">Everyone is settled.</p>'}
+    </div>
+    <div class="sec"><h4>Per person</h4>
+      <div class="banner info"><span>Planned all-in: <b class="money">${M.fmt(planned)}</b> each for ${g.length}.</span></div>
+      <ul class="list">${S.people.filter(x => spent[x.id] || bal[x.id]).map(x => `<li>${av(x.name)}<span class="grow">${esc(x.name)}<br><span class="sub">share of costs <span class="money">${M.fmt(spent[x.id])}</span></span></span><span class="money">${bal[x.id] > 0 ? '+' : ''}${M.fmt(bal[x.id])}</span></li>`).join('')}</ul></div>
+    ${p === 'on_trip' && S.booking && stayBal > 0 && !stayLogged ? `<button class="btn ghost" data-act="log-stay">Log the villa balance paid at check-in (${M.fmt(stayBal)})</button>` : ''}
+    <div class="sec"><h4>Expenses</h4>
+      <ul class="list">${S.expenses.map(e => `<li><span class="grow">${esc(e.label)}<br><span class="sub">${who(e.paidBy)} paid · split ${e.among.length} ways</span></span><span class="money">${M.fmt(e.amount)}</span>${e.source !== 'advance' && M.eventAllowed(S, 'REMOVE_EXPENSE') && (org || e.paidBy === S.viewer) ? `<button class="x" data-act="rm-exp" data-id="${e.id}" aria-label="Remove ${esc(e.label)}">×</button>` : ''}</li>`).join('') || '<li class="sub">No expenses yet.</li>'}</ul></div>
+    ${M.eventAllowed(S, 'ADD_EXPENSE') ? `<div class="sec"><h4>Add an expense</h4>
+      <form class="card" data-form="expense">
+        <div class="grid2"><label class="f">What for<input type="text" id="f-exp-label" name="label" maxlength="60" placeholder="e.g. Dinner"></label>
+        <label class="f">Amount ₹<input type="text" id="f-exp-amt" name="amount" inputmode="numeric"></label>
+        <label class="f" style="grid-column:1/-1">Paid by<select class="in" id="f-exp-paid" name="paidBy">${g.map(x => `<option value="${x.id}" ${x.id === S.viewer ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label></div>
+        <span class="sub">Split among</span>
+        <div class="checks">${g.map(x => `<label><input type="checkbox" name="among" value="${x.id}" checked>${esc(x.name)}</label>`).join('')}</div>
+        <button class="btn ghost sm">Add expense</button></form></div>` : ''}
+    ${['settling', 'closed'].includes(p) ? `<div class="sec"><h4>Wrap up</h4>
+      <form class="card" data-form="album"><label class="f">Shared album link<input type="url" id="f-album" name="url" value="${esc(S.album)}" placeholder="https://photos.app.goo.gl/…"></label>
+        <div class="row"><button class="btn ghost sm">Save link</button>${S.album ? ext(S.album, 'Open album') : ''}</div>
+        <span class="sub">Make the album in Google Photos and paste its link. Apps can’t create shared albums any more.</span></form>
+      <div class="card"><span>How was it? <span class="sub">${pulse.length ? `${pulse.length} rated · avg ${(pulse.reduce((a, b) => a + b, 0) / pulse.length).toFixed(1)}` : 'No ratings yet'}</span></span>
+        <div class="chips">${[1, 2, 3, 4, 5].map(n => `<button class="chip" data-act="rate" data-n="${n}" aria-pressed="${S.pulse[S.viewer] === n}">${n}</button>`).join('')}</div></div>
+      ${org && p === 'settling' ? `${M.blockedReason(S, 'CLOSE') ? `<p class="sub">${esc(M.blockedReason(S, 'CLOSE'))}</p>` : ''}<button class="btn" data-act="close" ${M.blockedReason(S, 'CLOSE') ? 'disabled' : ''}>Close the trip</button>` : ''}
+      ${org && p === 'closed' ? '<button class="btn go" data-act="plan-again">Plan the next one with this group</button>' : ''}
+    </div>` : ''}`;
+}
+
+// ---------- sheet ----------
+function sheetHTML() {
+  const sh = ui.sheet;
+  return `<div class="scrim" data-act="sheet-cancel"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" data-stop="1">
+    <h2 id="sheet-title" style="font-size:20px">${esc(sh.title)}</h2><p class="sub">${esc(sh.body)}</p>${sh.extra || ''}
+    <div class="grid2"><button class="btn ghost" data-act="sheet-cancel">Not now</button><button class="btn ${sh.danger ? 'warn' : 'go'}" id="sheet-ok" data-act="sheet-ok">${esc(sh.ok)}</button></div></div></div>`;
+}
+function openSheet(s) { ui.sheet = s; renderFrame(); }
+
+// ---------- rail ----------
+function renderRail() {
+  const rail = document.getElementById('rail'); if (!rail) return;
+  const r = M.tripRange(S), cur = S.phase;
+  const reply = ['committing', 'ready_to_book'].includes(cur) ? nextScriptedReply(S) : null;
+  const jumps = [];
+  if (cur === 'committing') jumps.push(['past-deadline', 'Past the deadline']);
+  if (cur === 'booked' && r) jumps.push(['trip-day', 'Morning of day 1']);
+  if (cur === 'on_trip' && r) jumps.push(['trip-end', 'Last evening']);
+  const keys = Object.keys(PRESETS);
+  rail.innerHTML = `
+    <ol class="steps">${keys.map((k, i) => `<li><button data-act="preset" data-k="${k}" ${ui.preset === k ? 'aria-current="step"' : ''}><span class="n">0${i + 1}</span><span><span class="t">${esc(PRESETS[k].label)}</span><span class="d">${esc(STORY[k] || PRESETS[k].note)}</span></span></button></li>`).join('')}</ol>
+    <div class="demo"><span class="lbl">Demo controls · <span class="money">${esc(M.fmtWhen(S.clock))}</span></span>
+      <div class="btns">
+        ${reply ? `<button class="btn ghost sm" data-act="sim-reply">Next friend replies</button>` : ''}
+        ${jumps.map(([k, l]) => `<button class="btn ghost sm" data-act="jump" data-k="${k}">${l}</button>`).join('')}
+        <button class="btn ghost sm" data-act="clock" data-h="3">+3 hours</button>
+        <button class="btn ghost sm" data-act="clock" data-h="24">+1 day</button>
+        <button class="btn ghost sm" data-act="reset">Reset</button>
+      </div>
+      <span class="note">Switch who you are with the name at the top of the phone.</span>
+    </div>
+    <details class="more"><summary>Under the hood</summary>
+      <div class="path" aria-label="Trip lifecycle">${PATH.map((ph, i) => `${i ? '<i aria-hidden="true">›</i>' : ''}<span class="${ph === cur ? 'now' : idx(cur) > i && cur !== 'cancelled' ? 'done' : ''}">${esc(M.PHASE_LABEL[ph])}</span>`).join('')}${['failed', 'cancelled'].includes(cur) ? `<i aria-hidden="true">·</i><span class="off now">${esc(M.PHASE_LABEL[cur])}</span>` : ''}</div>
+      ${ui.last ? `<p><b>Last change:</b> ${esc(ui.last.summary || '')}</p>${ui.last.effects.length ? `<ul class="fx">${ui.last.effects.map(e => `<li>${esc(e)}</li>`).join('')}</ul>` : ''}` : ''}
+      <ul class="integ">${I.INTEGRATIONS.map(x => `<li><span class="cls ${x.live ? 'on' : ''}">${x.live ? 'on' : 'off'}</span><span>${esc(x.name)}</span><small>${esc(x.how)}</small></li>`).join('')}</ul>
+    </details>
+    <p class="note rule">Everything is simulated and saved only in this browser. No real bookings, messages or payments.</p>`;
+}
+
+// ---------- actions ----------
+const ACTIONS = {
+  tab: d => { ui.tab = d.tab; ui.logItem = null; renderFrame(); document.getElementById('view')?.focus?.(); },
+  preset: d => loadPreset(d.k),
+  reset: () => loadPreset(ui.preset),
+  'sim-reply': () => { const ev = nextScriptedReply(S); if (ev) act(ev, `${M.person(S, ev.id).name} ${ev.answer === 'in' ? 'committed' : 'is out'}`); },
+  clock: d => act({ type: 'SET_CLOCK', clock: M.addHoursISO(S.clock, Number(d.h)) }),
+  jump: d => {
+    const r = M.tripRange(S);
+    const to = d.k === 'past-deadline' ? M.addHoursISO(S.pact.deadline, 1) : d.k === 'trip-day' ? M.isoAt(r.start, '09:00') : M.isoAt(M.addDays(r.end, -1), '20:00');
+    act({ type: 'SET_CLOCK', clock: to });
+  },
+  viewas: d => act({ type: 'SET_VIEWER', id: d.id }, `You’re now viewing as ${M.person(S, d.id).name}`),
+  invite: () => { if (act({ type: 'INVITE' }, 'Invite ready. Share it in your group.')) { ui.tab = 'align'; renderFrame(); } },
+  avail: d => act({ type: 'SET_AVAIL', id: S.viewer, option: d.opt, value: d.v === '1' }),
+  choose: d => act({ type: 'CHOOSE_DATES', option: d.opt }, 'Dates chosen'),
+  'clear-budget': () => act({ type: 'SET_BUDGET', id: S.viewer, value: null }),
+  copy: d => { const done = () => toast('Copied'); try { navigator.clipboard.writeText(d.text).then(done, () => toast('Copy was blocked here. Select the text in WhatsApp instead.', true)); } catch (e) { toast('Copy isn’t available here.', true); } },
+  need: d => { ui.pact.need += Number(d.d); renderFrame(); },
+  'pact-day': d => { ui.pact.day = Number(d.d); renderFrame(); },
+  'open-pact': () => { const pc = ui.pact; const deadline = M.isoAt(M.addDays(M.ymdInIST(S.clock), pc.day), '18:00'); if (act({ type: 'OPEN_PACT', need: pc.need, deadline, rule: pc.rule }, 'Pact is open. Share it in the group.')) { ui.pact = null; } },
+  respond: d => act({ type: 'RESPOND', id: S.viewer, answer: d.a }, d.a === 'in' ? 'You’re in. You’ll only pay if the line is reached.' : 'Noted. No hard feelings, no follow-up.'),
+  nudge: () => act({ type: 'NUDGE' }, 'Reminder sent from Pakka, not from you (simulated).'),
+  revise: d => { const deadline = M.isoAt(M.addDays(M.ymdInIST(S.clock), 2), '18:00'); act({ type: 'REVISE_PACT', need: Number(d.need), deadline }, 'Pact revised'); },
+  cancel: () => openSheet({ title: 'Call the plan off?', body: 'No money has moved, so nobody owes anything. Everyone sees that the plan is off.', ok: 'Call it off', danger: true, run: () => act({ type: 'CANCEL' }) }),
+  withdraw: () => {
+    let body;
+    if (!S.booking) body = 'No money has moved yet, so pulling out costs nothing. The count drops by one' + (S.phase === 'ready_to_book' ? ', and booking locks again if the group falls under the line.' : '.');
+    else { const adv = S.expenses.find(e => e.source === 'advance'); const share = M.expenseShares(adv)[S.viewer] || 0; body = S.pact.rule === 'absorb' ? `The advance is already paid. By the rule the group agreed, your ${M.fmt(share)} share moves to the ${adv.among.length - 1} still going.` : `The advance is already paid. By the rule the group agreed, you still owe ${M.fmt(share)} unless someone takes your spot.`; }
+    openSheet({ title: 'Pull out of the trip?', body, ok: 'Pull out', danger: true, run: () => act({ type: 'WITHDRAW', id: S.viewer }, 'You’ve pulled out') });
+  },
+  'mark-paid': d => act({ type: 'RECORD_PAYMENT', from: d.from, to: d.to, amount: Number(d.amount) }, 'Marked as paid'),
+  'i-paid': d => openSheet({ title: `Paid ${M.person(S, d.to).name} ${M.fmt(Number(d.amount))}?`, body: 'Only confirm once the UPI payment went through in your app. Pakka can’t see your bank.', ok: 'Yes, I’ve paid', extra: '<label class="f">UPI reference (optional)<input type="text" id="f-utr" maxlength="30" placeholder="Last 4 digits are enough"></label>', run: () => act({ type: 'RECORD_PAYMENT', from: S.viewer, to: d.to, amount: Number(d.amount), ref: document.getElementById('f-utr')?.value || '' }, 'Thanks. Marked as paid.') }),
+  'change-dates': d => { const o = S.dates.options.find(x => x.id === d.opt); openSheet({ title: `Move to ${M.fmtDay(o.start)}?`, body: `The booking will be flagged until the host confirms the new dates, and any plan items beyond ${o.nights + 1} days get flagged.`, ok: 'Move the dates', run: () => act({ type: 'CHOOSE_DATES', option: d.opt }) }); },
+  'call-off': () => openSheet({ title: 'Call the trip off after booking?', body: 'The advance stays split by the rule the group agreed. The trip moves to settling so everyone can square up.', ok: 'Call it off', danger: true, run: () => { if (act({ type: 'CALL_OFF' })) { ui.tab = 'money'; renderFrame(); } } }),
+  'start-trip': () => { if (act({ type: 'START_TRIP' }, 'Have a great trip')) { ui.tab = 'plan'; renderFrame(); } },
+  'end-trip': () => openSheet({ title: 'End the trip?', body: 'You can still add expenses afterwards. Settle-up starts now.', ok: 'End the trip', run: () => { if (act({ type: 'END_TRIP' })) { ui.tab = 'money'; renderFrame(); } } }),
+  'rm-item': d => act({ type: 'REMOVE_ITEM', id: d.id }),
+  'log-item': d => { ui.logItem = d.id || null; renderFrame(); },
+  'log-stay': () => { const g = going().map(x => x.id); act({ type: 'ADD_EXPENSE', label: 'Villa balance at check-in', amount: S.costs.stayTotal - S.booking.amountPaid, paidBy: S.viewer, among: g, source: 'stay-balance' }, 'Logged'); },
+  'rm-exp': d => act({ type: 'REMOVE_EXPENSE', id: d.id }),
+  rate: d => act({ type: 'RATE', id: S.viewer, score: Number(d.n) }, 'Thanks'),
+  close: () => act({ type: 'CLOSE' }, 'Trip closed'),
+  'plan-again': () => { S = M.planAgain(S); ui.tab = 'align'; ui.last = { summary: S.log[0].summary, effects: S.log[0].effects }; save(); render(); toast('New plan started with the same group'); },
+  'sheet-ok': () => { const s = ui.sheet; const run = s?.run; ui.sheet = null; if (run) { if (run() === false) renderFrame(); } else renderFrame(); },
+  'sheet-cancel': (d, el, e) => { if (e && e.target.closest('[data-stop]') && !e.target.closest('[data-act="sheet-cancel"]:not(.scrim)')) return; ui.sheet = null; renderFrame(); }
+};
+
+const FORMS = {
+  trip: f => act({ type: 'SET_TRIP', name: f.get('name'), destination: f.get('destination') }, 'Saved'),
+  person: (f, el) => { if (act({ type: 'ADD_PERSON', name: f.get('name') })) document.getElementById('f-person')?.focus(); },
+  date: f => act({ type: 'ADD_DATE_OPTION', start: f.get('start'), nights: Number(f.get('nights')) }),
+  costs: f => {
+    const c = {}; for (const k of ['stayTotal', 'advance', 'transportPP', 'foodPPPerDay']) { c[k] = parseRs(f.get(k)); if (Number.isNaN(c[k])) return toast('Enter costs as whole rupee amounts.', true); }
+    if (S.booking) delete c.advance;
+    act({ type: 'SET_COSTS', costs: c }, 'Costs updated');
+  },
+  budget: f => { const v = String(f.get('budget') || '').trim(); act({ type: 'SET_BUDGET', id: S.viewer, value: v ? parseRs(v) : null }, v ? 'Saved privately' : 'Cleared'); },
+  booking: f => {
+    const amt = parseRs(f.get('amountPaid'));
+    if (Number.isNaN(amt)) return toast('Enter what you paid, in rupees.', true);
+    if (act({ type: 'CONFIRM_BOOKING', provider: f.get('provider'), reference: f.get('reference'), amountPaid: amt, paidBy: f.get('paidBy'), cancelBy: f.get('cancelBy') }, 'Booking recorded. Shares are out.')) { ui.tab = 'book'; renderFrame(); }
+  },
+  recheck: f => act({ type: 'RECHECK_BOOKING', reference: f.get('reference') }, 'Booking re-confirmed'),
+  replace: (f, el) => act({ type: 'REPLACE', id: el.dataset.id, name: f.get('name') }),
+  item: f => { const raw = String(f.get('costPP') || '').trim(); const c = raw ? parseRs(raw) : 0; if (Number.isNaN(c)) return toast('Enter the cost in whole rupees.', true); act({ type: 'ADD_ITEM', day: Number(f.get('day')), start: f.get('start'), end: f.get('end'), title: f.get('title'), place: f.get('place'), costPP: c }, 'Added to the plan'); },
+  logitem: (f, el) => { if (act({ type: 'LOG_ITEM_EXPENSE', id: el.dataset.id, paidBy: f.get('paidBy'), among: f.getAll('among') }, 'Logged')) ui.logItem = null; },
+  expense: f => { const a = parseRs(f.get('amount')); if (Number.isNaN(a)) return toast('Enter the amount in whole rupees.', true); act({ type: 'ADD_EXPENSE', label: f.get('label'), amount: a, paidBy: f.get('paidBy'), among: f.getAll('among') }, 'Expense added'); },
+  album: f => act({ type: 'SET_ALBUM', url: f.get('url') }, 'Saved')
+};
+
+const CHANGES = {
+  viewer: el => act({ type: 'SET_VIEWER', id: el.value }, `You’re now viewing as ${M.person(S, el.value).name}`),
+  rule: el => { ui.pact.rule = el.value; }
+};
+
+// ---------- boot ----------
+function boot() {
+  const app = document.getElementById('app');
+  app.innerHTML = '<div class="frame" id="frame" style="display:flex;flex-direction:column;flex:1;min-height:0"></div><div class="toast" id="toast" role="status" aria-live="polite"></div>';
+  const saved = load();
+  if (saved && !saved.bad) { S = saved.s; ui.tab = saved.tab || 'home'; ui.preset = saved.preset || DEFAULT_PRESET; }
+  else S = PRESETS[DEFAULT_PRESET].build();
+  const h = (location.hash || '').slice(1);
+  if (TABS.some(t => t[0] === h)) ui.tab = h;
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-act]'); if (!t) return;
+    if (t.classList.contains('scrim') && e.target !== t) return;   // clicks inside the sheet don't close it
+    const fn = ACTIONS[t.dataset.act]; if (!fn) return;
+    e.preventDefault(); fn(t.dataset, t, e);
+  });
+  document.addEventListener('submit', e => { const f = e.target.closest('form[data-form]'); if (!f) return; e.preventDefault(); FORMS[f.dataset.form](new FormData(f), f); });
+  document.addEventListener('change', e => { const t = e.target.closest('[data-change]'); if (t) CHANGES[t.dataset.change](t); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && ui.sheet) { ui.sheet = null; renderFrame(); } });
+  render();
+  if (saved && saved.bad) toast('Saved demo data couldn’t be read, so the demo was reset.', true);
+}
+boot();
+</script>

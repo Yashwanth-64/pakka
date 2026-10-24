@@ -1,0 +1,906 @@
+{
+ "state": {
+  "schema": 2,
+  "seq": {
+   "p": 8,
+   "l": 68,
+   "d": 3,
+   "e": 4,
+   "m": 3,
+   "i": 5
+  },
+  "clock": "2026-11-16T20:00:00+05:30",
+  "viewer": "p1",
+  "phase": "settling",
+  "trip": {
+   "name": "Coorg long weekend",
+   "destination": "Coorg, Karnataka",
+   "occasion": "Long weekend"
+  },
+  "people": [
+   {
+    "id": "p1",
+    "name": "Yash",
+    "organiser": true,
+    "status": "in",
+    "budgetMax": 1200000,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": false
+    }
+   },
+   {
+    "id": "p2",
+    "name": "Rohan",
+    "organiser": false,
+    "status": "in",
+    "budgetMax": 1100000,
+    "avail": {
+     "d1": true,
+     "d2": false,
+     "d3": true
+    }
+   },
+   {
+    "id": "p3",
+    "name": "Priya",
+    "organiser": false,
+    "status": "in",
+    "budgetMax": 1500000,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": true
+    }
+   },
+   {
+    "id": "p4",
+    "name": "Arjun",
+    "organiser": false,
+    "status": "in",
+    "budgetMax": null,
+    "avail": {
+     "d1": true,
+     "d2": false,
+     "d3": false
+    }
+   },
+   {
+    "id": "p5",
+    "name": "Meera",
+    "organiser": false,
+    "status": "out",
+    "budgetMax": 950000,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": false
+    }
+   },
+   {
+    "id": "p6",
+    "name": "Kabir",
+    "organiser": false,
+    "status": "in",
+    "budgetMax": 1200000,
+    "avail": {
+     "d1": false,
+     "d2": true,
+     "d3": true
+    }
+   },
+   {
+    "id": "p7",
+    "name": "Sana",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": true
+    }
+   },
+   {
+    "id": "p8",
+    "name": "Dev",
+    "organiser": false,
+    "status": "in",
+    "budgetMax": 1000000,
+    "avail": {
+     "d1": true,
+     "d2": false,
+     "d3": true
+    }
+   }
+  ],
+  "dates": {
+   "options": [
+    {
+     "id": "d1",
+     "start": "2026-11-13",
+     "nights": 3
+    },
+    {
+     "id": "d2",
+     "start": "2026-11-20",
+     "nights": 2
+    },
+    {
+     "id": "d3",
+     "start": "2026-11-27",
+     "nights": 3
+    }
+   ],
+   "chosenId": "d1"
+  },
+  "costs": {
+   "stayTotal": 3600000,
+   "advance": 1200000,
+   "transportPP": 110000,
+   "foodPPPerDay": 90000
+  },
+  "pact": {
+   "need": 6,
+   "deadline": "2026-10-21T18:00:00+05:30",
+   "rule": "keep",
+   "openedAt": "2026-10-19T10:00:00+05:30"
+  },
+  "booking": {
+   "status": "confirmed",
+   "provider": "Villa host (direct)",
+   "reference": "HMX4K2T9Q",
+   "amountPaid": 1200000,
+   "paidBy": "p1",
+   "cancelBy": "2026-10-30",
+   "confirmedAt": "2026-10-20T16:00:00+05:30",
+   "forStart": "2026-11-13",
+   "forNights": 3,
+   "note": ""
+  },
+  "items": [
+   {
+    "id": "i1",
+    "day": 1,
+    "start": "07:00",
+    "end": "13:00",
+    "title": "Bus Bengaluru → Madikeri",
+    "place": "Madikeri KSRTC bus stand",
+    "costPP": 0,
+    "expenseId": null
+   },
+   {
+    "id": "i2",
+    "day": 1,
+    "start": "16:30",
+    "end": "18:30",
+    "title": "Raja’s Seat at sunset",
+    "place": "Raja’s Seat, Madikeri",
+    "costPP": 0,
+    "expenseId": null
+   },
+   {
+    "id": "i3",
+    "day": 2,
+    "start": "08:00",
+    "end": "12:00",
+    "title": "Coffee estate walk",
+    "place": "Coffee plantation tour, Coorg",
+    "costPP": 60000,
+    "expenseId": "e4"
+   },
+   {
+    "id": "i4",
+    "day": 2,
+    "start": "14:00",
+    "end": "17:00",
+    "title": "Abbey Falls",
+    "place": "Abbey Falls, Madikeri",
+    "costPP": 5000,
+    "expenseId": null
+   },
+   {
+    "id": "i5",
+    "day": 3,
+    "start": "09:00",
+    "end": "15:00",
+    "title": "Dubare elephant camp + rafting",
+    "place": "Dubare Elephant Camp",
+    "costPP": 120000,
+    "expenseId": null
+   }
+  ],
+  "expenses": [
+   {
+    "id": "e1",
+    "label": "Stay advance · Villa host (direct)",
+    "amount": 1200000,
+    "paidBy": "p1",
+    "among": [
+     "p1",
+     "p2",
+     "p3",
+     "p4",
+     "p6",
+     "p8"
+    ],
+    "at": "2026-10-20T16:00:00+05:30",
+    "source": "advance"
+   },
+   {
+    "id": "e2",
+    "label": "Villa balance at check-in",
+    "amount": 2400000,
+    "paidBy": "p3",
+    "among": [
+     "p1",
+     "p2",
+     "p3",
+     "p4",
+     "p6",
+     "p8"
+    ],
+    "at": "2026-11-14T09:00:00+05:30",
+    "source": "stay-balance"
+   },
+   {
+    "id": "e3",
+    "label": "Dinner at Coorg Cuisine",
+    "amount": 420000,
+    "paidBy": "p6",
+    "among": [
+     "p1",
+     "p2",
+     "p3",
+     "p4",
+     "p6",
+     "p8"
+    ],
+    "at": "2026-11-14T09:00:00+05:30",
+    "source": "manual"
+   },
+   {
+    "id": "e4",
+    "label": "Coffee estate walk",
+    "amount": 300000,
+    "paidBy": "p8",
+    "among": [
+     "p1",
+     "p2",
+     "p3",
+     "p6",
+     "p8"
+    ],
+    "at": "2026-11-14T09:00:00+05:30",
+    "source": "item:i3"
+   }
+  ],
+  "payments": [
+   {
+    "id": "m1",
+    "from": "p3",
+    "to": "p1",
+    "amount": 200000,
+    "at": "2026-10-20T16:00:00+05:30",
+    "ref": "UPI 4471"
+   },
+   {
+    "id": "m2",
+    "from": "p6",
+    "to": "p1",
+    "amount": 200000,
+    "at": "2026-10-20T16:00:00+05:30",
+    "ref": ""
+   },
+   {
+    "id": "m3",
+    "from": "p4",
+    "to": "p1",
+    "amount": 200000,
+    "at": "2026-10-20T16:00:00+05:30",
+    "ref": ""
+   }
+  ],
+  "album": "",
+  "pulse": {},
+  "log": [
+   {
+    "id": "l68",
+    "at": "2026-11-16T20:00:00+05:30",
+    "by": "p1",
+    "type": "END_TRIP",
+    "summary": "Trip ended; time to settle up",
+    "effects": [
+     "5 transfers to settle everyone"
+    ]
+   },
+   {
+    "id": "l67",
+    "at": "2026-11-16T20:00:00+05:30",
+    "by": "p1",
+    "type": "SET_CLOCK",
+    "summary": "Time moved to Mon, 16 Nov, 8 pm",
+    "effects": []
+   },
+   {
+    "id": "l66",
+    "at": "2026-11-14T09:00:00+05:30",
+    "by": "p1",
+    "type": "LOG_ITEM_EXPENSE",
+    "summary": "Dev paid for \"Coffee estate walk\"",
+    "effects": [
+     "₹3,000 split across the 5 who went"
+    ]
+   },
+   {
+    "id": "l65",
+    "at": "2026-11-14T09:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_EXPENSE",
+    "summary": "Kabir paid ₹4,200 for Dinner at Coorg Cuisine",
+    "effects": [
+     "Split across 6: about ₹700 each"
+    ]
+   },
+   {
+    "id": "l64",
+    "at": "2026-11-14T09:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_EXPENSE",
+    "summary": "Priya paid ₹24,000 for Villa balance at check-in",
+    "effects": [
+     "Split across 6: about ₹4,000 each"
+    ]
+   },
+   {
+    "id": "l63",
+    "at": "2026-11-14T09:00:00+05:30",
+    "by": "p1",
+    "type": "START_TRIP",
+    "summary": "Trip started",
+    "effects": []
+   },
+   {
+    "id": "l62",
+    "at": "2026-11-14T09:00:00+05:30",
+    "by": "p1",
+    "type": "SET_CLOCK",
+    "summary": "Time moved to Sat, 14 Nov, 9 am",
+    "effects": []
+   },
+   {
+    "id": "l61",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "RECORD_PAYMENT",
+    "summary": "Arjun marked ₹2,000 paid to Yash",
+    "effects": []
+   },
+   {
+    "id": "l60",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_ITEM",
+    "summary": "Added \"Dubare elephant camp + rafting\" on day 3",
+    "effects": [
+     "Per-person forecast +₹1,200"
+    ]
+   },
+   {
+    "id": "l59",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_ITEM",
+    "summary": "Added \"Abbey Falls\" on day 2",
+    "effects": [
+     "Per-person forecast +₹50"
+    ]
+   },
+   {
+    "id": "l58",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_ITEM",
+    "summary": "Added \"Coffee estate walk\" on day 2",
+    "effects": [
+     "Per-person forecast +₹600"
+    ]
+   },
+   {
+    "id": "l57",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_ITEM",
+    "summary": "Added \"Raja’s Seat at sunset\" on day 1",
+    "effects": []
+   },
+   {
+    "id": "l56",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_ITEM",
+    "summary": "Added \"Bus Bengaluru → Madikeri\" on day 1",
+    "effects": []
+   },
+   {
+    "id": "l55",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "RECORD_PAYMENT",
+    "summary": "Kabir marked ₹2,000 paid to Yash",
+    "effects": []
+   },
+   {
+    "id": "l54",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "RECORD_PAYMENT",
+    "summary": "Priya marked ₹2,000 paid to Yash",
+    "effects": []
+   },
+   {
+    "id": "l53",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "CONFIRM_BOOKING",
+    "summary": "Yash confirmed the booking (HMX4K2T9Q)",
+    "effects": [
+     "Advance ₹12,000 split across 6: ₹2,000 each",
+     "Balance due at check-in: ₹24,000"
+    ]
+   },
+   {
+    "id": "l52",
+    "at": "2026-10-20T16:00:00+05:30",
+    "by": "p1",
+    "type": "SET_CLOCK",
+    "summary": "Time moved to Tue, 20 Oct, 4 pm",
+    "effects": []
+   },
+   {
+    "id": "l51",
+    "at": "2026-10-20T12:00:00+05:30",
+    "by": "p1",
+    "type": "RESPOND",
+    "summary": "Dev committed",
+    "effects": [
+     "It's pakka: 6 committed. Booking unlocked",
+     "Going: 5 → 6",
+     "Per-person forecast ₹11,900 → ₹10,700"
+    ]
+   },
+   {
+    "id": "l50",
+    "at": "2026-10-20T12:00:00+05:30",
+    "by": "p1",
+    "type": "RESPOND",
+    "summary": "Rohan committed",
+    "effects": [
+     "Going: 4 → 5",
+     "Per-person forecast ₹13,700 → ₹11,900"
+    ]
+   },
+   {
+    "id": "l49",
+    "at": "2026-10-20T12:00:00+05:30",
+    "by": "p1",
+    "type": "RESPOND",
+    "summary": "Kabir committed",
+    "effects": [
+     "Going: 3 → 4",
+     "Per-person forecast ₹16,700 → ₹13,700"
+    ]
+   },
+   {
+    "id": "l48",
+    "at": "2026-10-20T12:00:00+05:30",
+    "by": "p1",
+    "type": "SET_CLOCK",
+    "summary": "Time moved to Tue, 20 Oct, 12 pm",
+    "effects": []
+   },
+   {
+    "id": "l47",
+    "at": "2026-10-19T15:00:00+05:30",
+    "by": "p1",
+    "type": "RESPOND",
+    "summary": "Meera can’t make it",
+    "effects": []
+   },
+   {
+    "id": "l46",
+    "at": "2026-10-19T15:00:00+05:30",
+    "by": "p1",
+    "type": "RESPOND",
+    "summary": "Arjun committed",
+    "effects": [
+     "Going: 2 → 3",
+     "Per-person forecast ₹22,700 → ₹16,700"
+    ]
+   },
+   {
+    "id": "l45",
+    "at": "2026-10-19T15:00:00+05:30",
+    "by": "p1",
+    "type": "RESPOND",
+    "summary": "Priya committed",
+    "effects": [
+     "Going: 1 → 2",
+     "Per-person forecast ₹40,700 → ₹22,700"
+    ]
+   },
+   {
+    "id": "l44",
+    "at": "2026-10-19T15:00:00+05:30",
+    "by": "p1",
+    "type": "SET_CLOCK",
+    "summary": "Time moved to Mon, 19 Oct, 3 pm",
+    "effects": []
+   },
+   {
+    "id": "l43",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "OPEN_PACT",
+    "summary": "Pact opened: needs 6 by Wed, 21 Oct, 6 pm",
+    "effects": [
+     "Each share ₹9,200–₹10,700 depending on headcount"
+    ]
+   },
+   {
+    "id": "l42",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "CHOOSE_DATES",
+    "summary": "Dates set: Fri, 13 Nov → Mon, 16 Nov",
+    "effects": []
+   },
+   {
+    "id": "l41",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Dev set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 4 of 6 budgets shared"
+    ]
+   },
+   {
+    "id": "l40",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Kabir set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 4 of 5 budgets shared"
+    ]
+   },
+   {
+    "id": "l39",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Meera set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 3 of 4 budgets shared"
+    ]
+   },
+   {
+    "id": "l38",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Priya set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 3 of 3 budgets shared"
+    ]
+   },
+   {
+    "id": "l37",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Rohan set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 2 of 2 budgets shared"
+    ]
+   },
+   {
+    "id": "l36",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Yash set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 1 of 1 budgets shared"
+    ]
+   },
+   {
+    "id": "l35",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Dev can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l34",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Dev can’t make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l33",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Dev can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l32",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Sana can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l31",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Sana can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l30",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Sana can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l29",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Kabir can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l28",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Kabir can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l27",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Kabir can’t make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l26",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Meera can’t make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l25",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Meera can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l24",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Meera can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l23",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Arjun can’t make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l22",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Arjun can’t make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l21",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Arjun can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l20",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Priya can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l19",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Priya can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l18",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Priya can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l17",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Rohan can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l16",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Rohan can’t make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l15",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Rohan can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l14",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Yash can’t make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l13",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Yash can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l12",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Yash can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l11",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "INVITE",
+    "summary": "Invite link shared with the group",
+    "effects": [
+     "7 friends can now mark dates and a private budget"
+    ]
+   },
+   {
+    "id": "l10",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 27 Nov, 3 nights",
+    "effects": []
+   },
+   {
+    "id": "l9",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 20 Nov, 2 nights",
+    "effects": []
+   }
+  ]
+ },
+ "expected": {
+  "balances": {
+   "p1": -130000,
+   "p2": -730000,
+   "p3": 1870000,
+   "p4": -470000,
+   "p5": 0,
+   "p6": -110000,
+   "p7": 0,
+   "p8": -430000
+  },
+  "shares": {
+   "e1": {
+    "p1": 200000,
+    "p2": 200000,
+    "p3": 200000,
+    "p4": 200000,
+    "p6": 200000,
+    "p8": 200000
+   },
+   "e2": {
+    "p1": 400000,
+    "p2": 400000,
+    "p3": 400000,
+    "p4": 400000,
+    "p6": 400000,
+    "p8": 400000
+   },
+   "e3": {
+    "p1": 70000,
+    "p2": 70000,
+    "p3": 70000,
+    "p4": 70000,
+    "p6": 70000,
+    "p8": 70000
+   },
+   "e4": {
+    "p1": 60000,
+    "p2": 60000,
+    "p3": 60000,
+    "p6": 60000,
+    "p8": 60000
+   }
+  },
+  "committed": 6,
+  "pending": 1,
+  "budgetFit": {
+   "target": 1255000,
+   "shared": 6,
+   "fits": 1,
+   "of": 8
+  },
+  "dateTally": [
+   {
+    "id": "d1",
+    "yes": 7
+   },
+   {
+    "id": "d2",
+    "yes": 5
+   },
+   {
+    "id": "d3",
+    "yes": 5
+   }
+  ]
+ }
+}

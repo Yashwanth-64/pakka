@@ -1,0 +1,14 @@
+{
+  "name": "pakka",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Commit-pact trip planner for friend groups: prototype with a guarded state graph and a single ledger.",
+  "scripts": {
+    "test": "node --test test/model.test.mjs test/graph.test.mjs test/integrations.test.mjs",
+    "test:sql": "node test/export-fixture.mjs && python3 -I test/sql_crosscheck.py",
+    "build": "node build.mjs",
+    "test:e2e": "node build.mjs && NODE_PATH=${NODE_PATH:-/opt/npm-tools/node_modules} node test/e2e.mjs",
+    "check": "npm test && npm run test:sql && npm run test:e2e"
+  }
+}

@@ -1,0 +1,234 @@
+{
+ "state": {
+  "schema": 2,
+  "seq": {
+   "p": 8,
+   "l": 10,
+   "d": 3
+  },
+  "clock": "2026-10-19T10:00:00+05:30",
+  "viewer": "p1",
+  "phase": "draft",
+  "trip": {
+   "name": "Coorg long weekend",
+   "destination": "Coorg, Karnataka",
+   "occasion": "Long weekend"
+  },
+  "people": [
+   {
+    "id": "p1",
+    "name": "Yash",
+    "organiser": true,
+    "status": "in",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p2",
+    "name": "Rohan",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p3",
+    "name": "Priya",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p4",
+    "name": "Arjun",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p5",
+    "name": "Meera",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p6",
+    "name": "Kabir",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p7",
+    "name": "Sana",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   },
+   {
+    "id": "p8",
+    "name": "Dev",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {}
+   }
+  ],
+  "dates": {
+   "options": [
+    {
+     "id": "d1",
+     "start": "2026-11-13",
+     "nights": 3
+    },
+    {
+     "id": "d2",
+     "start": "2026-11-20",
+     "nights": 2
+    },
+    {
+     "id": "d3",
+     "start": "2026-11-27",
+     "nights": 3
+    }
+   ],
+   "chosenId": null
+  },
+  "costs": {
+   "stayTotal": 3600000,
+   "advance": 1200000,
+   "transportPP": 110000,
+   "foodPPPerDay": 90000
+  },
+  "pact": null,
+  "booking": null,
+  "items": [],
+  "expenses": [],
+  "payments": [],
+  "album": "",
+  "pulse": {},
+  "log": [
+   {
+    "id": "l10",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 27 Nov, 3 nights",
+    "effects": []
+   },
+   {
+    "id": "l9",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 20 Nov, 2 nights",
+    "effects": []
+   },
+   {
+    "id": "l8",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 13 Nov, 3 nights",
+    "effects": []
+   },
+   {
+    "id": "l7",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Dev added to the group",
+    "effects": []
+   },
+   {
+    "id": "l6",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Sana added to the group",
+    "effects": []
+   },
+   {
+    "id": "l5",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Kabir added to the group",
+    "effects": []
+   },
+   {
+    "id": "l4",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Meera added to the group",
+    "effects": []
+   },
+   {
+    "id": "l3",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Arjun added to the group",
+    "effects": []
+   },
+   {
+    "id": "l2",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Priya added to the group",
+    "effects": []
+   },
+   {
+    "id": "l1",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Rohan added to the group",
+    "effects": []
+   }
+  ]
+ },
+ "expected": {
+  "balances": {
+   "p1": 0,
+   "p2": 0,
+   "p3": 0,
+   "p4": 0,
+   "p5": 0,
+   "p6": 0,
+   "p7": 0,
+   "p8": 0
+  },
+  "shares": {},
+  "committed": 1,
+  "pending": 7,
+  "budgetFit": {
+   "target": 1070000,
+   "shared": 0,
+   "fits": 0,
+   "of": 8
+  },
+  "dateTally": [
+   {
+    "id": "d1",
+    "yes": 0
+   },
+   {
+    "id": "d2",
+    "yes": 0
+   },
+   {
+    "id": "d3",
+    "yes": 0
+   }
+  ]
+ }
+}

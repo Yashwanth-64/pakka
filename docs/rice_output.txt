@@ -1,0 +1,111 @@
+============================================================
+RICE PRIORITIZATION RESULTS
+============================================================
+
+📊 TOP PRIORITIZED FEATURES
+
+1. Shared trip model + event log
+   RICE Score: 60.0
+   Reach: 100 | Impact: massive | Confidence: high | Effort: m
+
+2. Booking register with manual confirmation
+   RICE Score: 53.33
+   Reach: 80 | Impact: high | Confidence: high | Effort: s
+
+3. Advance shares in one ledger
+   RICE Score: 53.33
+   Reach: 80 | Impact: high | Confidence: high | Effort: s
+
+4. Private budget ceilings
+   RICE Score: 42.67
+   Reach: 80 | Impact: high | Confidence: medium | Effort: s
+
+5. Calendar add (connector + link fallback)
+   RICE Score: 35.0
+   Reach: 70 | Impact: low | Confidence: high | Effort: xs
+
+6. Maps links per stop
+   RICE Score: 35.0
+   Reach: 70 | Impact: low | Confidence: high | Effort: xs
+
+7. Headcount recalculation on dropout
+   RICE Score: 32.0
+   Reach: 60 | Impact: high | Confidence: medium | Effort: s
+
+8. Live multi-user sync
+   RICE Score: 30.0
+   Reach: 100 | Impact: massive | Confidence: medium | Effort: l
+
+9. Date options linked to attendance
+   RICE Score: 24.0
+   Reach: 90 | Impact: medium | Confidence: medium | Effort: s
+
+10. Album link + post-trip pulse + reuse as template
+   RICE Score: 20.0
+   Reach: 50 | Impact: low | Confidence: medium | Effort: xs
+
+
+📈 PORTFOLIO ANALYSIS
+
+Total Features: 20
+Total Effort: 91 person-months
+Total Reach: 1,370 users
+Average RICE Score: 24.2
+
+🎯 Quick Wins: 4 features
+   • Booking register with manual confirmation (RICE: 53.33)
+   • Advance shares in one ledger (RICE: 53.33)
+   • Private budget ceilings (RICE: 42.67)
+
+🚀 Big Bets: 3 features
+   • Live multi-user sync (RICE: 30.0)
+   • Real UPI collection or escrow (RICE: 11.54)
+   • Multi-origin transport coordinator (RICE: 2.31)
+
+
+📅 SUGGESTED ROADMAP
+
+
+Q1 - Capacity: 8/8 person-months
+   • Shared trip model + event log (RICE: 60.0)
+   • Booking register with manual confirmation (RICE: 53.33)
+
+Q2 - Capacity: 8/8 person-months
+   • Advance shares in one ledger (RICE: 53.33)
+   • Private budget ceilings (RICE: 42.67)
+   • Calendar add (connector + link fallback) (RICE: 35.0)
+   • Maps links per stop (RICE: 35.0)
+
+Q3 - Capacity: 3/8 person-months
+   • Headcount recalculation on dropout (RICE: 32.0)
+
+Q4 - Capacity: 8/8 person-months
+   • Live multi-user sync (RICE: 30.0)
+
+Q5 - Capacity: 7/8 person-months
+   • Date options linked to attendance (RICE: 24.0)
+   • Album link + post-trip pulse + reuse as template (RICE: 20.0)
+   • Today briefing on the trip (RICE: 18.67)
+
+Q6 - Capacity: 8/8 person-months
+   • Expenses with uneven splits and settlement (RICE: 18.0)
+   • Live per-person cost forecast (RICE: 16.0)
+
+Q7 - Capacity: 13/8 person-months
+   • Real UPI collection or escrow (RICE: 11.54)
+
+Q8 - Capacity: 8/8 person-months
+   • Itinerary with conflict and date-change flags (RICE: 11.2)
+   • Paste booking confirmation parser (RICE: 8.33)
+
+Q9 - Capacity: 5/8 person-months
+   • Room and bed allocation (RICE: 4.8)
+
+Q10 - Capacity: 5/8 person-months
+   • Group dining vote (RICE: 4.8)
+
+Q11 - Capacity: 5/8 person-months
+   • Weather plan B (RICE: 3.0)
+
+Q12 - Capacity: 13/8 person-months
+   • Multi-origin transport coordinator (RICE: 2.31)

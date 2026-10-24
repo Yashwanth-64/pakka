@@ -1,0 +1,21 @@
+name,reach,impact,confidence,effort,description
+Shared trip model + event log,100,massive,high,m,One source of truth so every stage reads the same people/costs/decisions
+Headcount recalculation on dropout,60,high,medium,s,Withdrawal recomputes per-person cost and threshold viability and applies the agreed rule
+Private budget ceilings,80,high,medium,s,Each friend states a max privately; organiser sees only how many budgets the forecast fits
+Date options linked to attendance,90,medium,medium,s,Date poll shows how many can come for each option and feeds the chosen dates downstream
+Booking register with manual confirmation,80,high,high,s,Stay link-out plus explicit booking reference and cancel-by date; never auto-confirmed
+Advance shares in one ledger,80,high,high,s,Advance becomes a ledger expense; share requests and payments settle against it
+Itinerary with conflict and date-change flags,70,medium,medium,m,Day plan flags overlapping slots and items pushed outside the trip when dates change
+Expenses with uneven splits and settlement,90,medium,high,m,Log who paid and who joined; minimal transfers to settle; mark paid manually
+Live per-person cost forecast,60,medium,medium,s,Planned + actual cost per person updates as stay cost and headcount change
+Today briefing on the trip,70,medium,medium,s,Today's slots with map links and who is going
+Calendar add (connector + link fallback),70,low,high,xs,Google Calendar via viewer connector; template link otherwise
+Maps links per stop,70,low,high,xs,Google Maps URLs (documented; no key)
+Paste booking confirmation parser,50,medium,low,s,Claude extracts reference/amount/cancel-by from pasted text; user confirms
+Weather plan B,30,medium,low,m,Needs a server proxy (CSP) and commercial weather licence
+Live multi-user sync,100,massive,medium,l,Friends commit from their own phones; needs signed-in viewers
+Room and bed allocation,30,medium,medium,m,Fair room assignment for villas
+Album link + post-trip pulse + reuse as template,50,low,medium,xs,Close the loop and seed the next trip
+Multi-origin transport coordinator,30,high,low,xl,Group-level route optimisation from several cities
+Real UPI collection or escrow,100,massive,low,xl,Regulated; needs PA partner
+Group dining vote,60,low,medium,m,Fast restaurant vote on the trip

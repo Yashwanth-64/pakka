@@ -1,0 +1,528 @@
+{
+ "state": {
+  "schema": 2,
+  "seq": {
+   "p": 8,
+   "l": 41,
+   "d": 3
+  },
+  "clock": "2026-10-19T10:00:00+05:30",
+  "viewer": "p1",
+  "phase": "aligning",
+  "trip": {
+   "name": "Coorg long weekend",
+   "destination": "Coorg, Karnataka",
+   "occasion": "Long weekend"
+  },
+  "people": [
+   {
+    "id": "p1",
+    "name": "Yash",
+    "organiser": true,
+    "status": "in",
+    "budgetMax": 1200000,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": false
+    }
+   },
+   {
+    "id": "p2",
+    "name": "Rohan",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": 1100000,
+    "avail": {
+     "d1": true,
+     "d2": false,
+     "d3": true
+    }
+   },
+   {
+    "id": "p3",
+    "name": "Priya",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": 1500000,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": true
+    }
+   },
+   {
+    "id": "p4",
+    "name": "Arjun",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {
+     "d1": true,
+     "d2": false,
+     "d3": false
+    }
+   },
+   {
+    "id": "p5",
+    "name": "Meera",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": 950000,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": false
+    }
+   },
+   {
+    "id": "p6",
+    "name": "Kabir",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": 1200000,
+    "avail": {
+     "d1": false,
+     "d2": true,
+     "d3": true
+    }
+   },
+   {
+    "id": "p7",
+    "name": "Sana",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": null,
+    "avail": {
+     "d1": true,
+     "d2": true,
+     "d3": true
+    }
+   },
+   {
+    "id": "p8",
+    "name": "Dev",
+    "organiser": false,
+    "status": "invited",
+    "budgetMax": 1000000,
+    "avail": {
+     "d1": true,
+     "d2": false,
+     "d3": true
+    }
+   }
+  ],
+  "dates": {
+   "options": [
+    {
+     "id": "d1",
+     "start": "2026-11-13",
+     "nights": 3
+    },
+    {
+     "id": "d2",
+     "start": "2026-11-20",
+     "nights": 2
+    },
+    {
+     "id": "d3",
+     "start": "2026-11-27",
+     "nights": 3
+    }
+   ],
+   "chosenId": null
+  },
+  "costs": {
+   "stayTotal": 3600000,
+   "advance": 1200000,
+   "transportPP": 110000,
+   "foodPPPerDay": 90000
+  },
+  "pact": null,
+  "booking": null,
+  "items": [],
+  "expenses": [],
+  "payments": [],
+  "album": "",
+  "pulse": {},
+  "log": [
+   {
+    "id": "l41",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Dev set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 4 of 6 budgets shared"
+    ]
+   },
+   {
+    "id": "l40",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Kabir set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 4 of 5 budgets shared"
+    ]
+   },
+   {
+    "id": "l39",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Meera set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 3 of 4 budgets shared"
+    ]
+   },
+   {
+    "id": "l38",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Priya set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 3 of 3 budgets shared"
+    ]
+   },
+   {
+    "id": "l37",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Rohan set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 2 of 2 budgets shared"
+    ]
+   },
+   {
+    "id": "l36",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_BUDGET",
+    "summary": "Yash set a private budget",
+    "effects": [
+     "Forecast ₹10,700 fits 1 of 1 budgets shared"
+    ]
+   },
+   {
+    "id": "l35",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Dev can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l34",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Dev can’t make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l33",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Dev can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l32",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Sana can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l31",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Sana can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l30",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Sana can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l29",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Kabir can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l28",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Kabir can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l27",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Kabir can’t make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l26",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Meera can’t make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l25",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Meera can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l24",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Meera can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l23",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Arjun can’t make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l22",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Arjun can’t make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l21",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Arjun can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l20",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Priya can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l19",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Priya can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l18",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Priya can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l17",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Rohan can make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l16",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Rohan can’t make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l15",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Rohan can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l14",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Yash can’t make Fri, 27 Nov",
+    "effects": []
+   },
+   {
+    "id": "l13",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Yash can make Fri, 20 Nov",
+    "effects": []
+   },
+   {
+    "id": "l12",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "SET_AVAIL",
+    "summary": "Yash can make Fri, 13 Nov",
+    "effects": []
+   },
+   {
+    "id": "l11",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "INVITE",
+    "summary": "Invite link shared with the group",
+    "effects": [
+     "7 friends can now mark dates and a private budget"
+    ]
+   },
+   {
+    "id": "l10",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 27 Nov, 3 nights",
+    "effects": []
+   },
+   {
+    "id": "l9",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 20 Nov, 2 nights",
+    "effects": []
+   },
+   {
+    "id": "l8",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_DATE_OPTION",
+    "summary": "Date option added: Fri, 13 Nov, 3 nights",
+    "effects": []
+   },
+   {
+    "id": "l7",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Dev added to the group",
+    "effects": []
+   },
+   {
+    "id": "l6",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Sana added to the group",
+    "effects": []
+   },
+   {
+    "id": "l5",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Kabir added to the group",
+    "effects": []
+   },
+   {
+    "id": "l4",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Meera added to the group",
+    "effects": []
+   },
+   {
+    "id": "l3",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Arjun added to the group",
+    "effects": []
+   },
+   {
+    "id": "l2",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Priya added to the group",
+    "effects": []
+   },
+   {
+    "id": "l1",
+    "at": "2026-10-19T10:00:00+05:30",
+    "by": "p1",
+    "type": "ADD_PERSON",
+    "summary": "Rohan added to the group",
+    "effects": []
+   }
+  ]
+ },
+ "expected": {
+  "balances": {
+   "p1": 0,
+   "p2": 0,
+   "p3": 0,
+   "p4": 0,
+   "p5": 0,
+   "p6": 0,
+   "p7": 0,
+   "p8": 0
+  },
+  "shares": {},
+  "committed": 1,
+  "pending": 7,
+  "budgetFit": {
+   "target": 1070000,
+   "shared": 6,
+   "fits": 4,
+   "of": 8
+  },
+  "dateTally": [
+   {
+    "id": "d1",
+    "yes": 7
+   },
+   {
+    "id": "d2",
+    "yes": 5
+   },
+   {
+    "id": "d3",
+    "yes": 5
+   }
+  ]
+ }
+}
